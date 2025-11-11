@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokéWiki - Enciclopedia Pokémon</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Variables y reset */
+        :root {
+            --primary: #DC0A2D;
+            --primary-dark: #A0051C;
+            --primary-light: #FF3B5C;
+            --secondary: #2A75BB;
+            --secondary-dark: #1C5A9B;
+            --accent: #FFCB05;
+            --dark: #1E1E1E;
+            --light: #F5F5F5;
+            --gray: #6C757D;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --electric: #FFDE00;
+            --water: #4592C4;
+            --fire: #FD7D24;
+            --grass: #9BCC50;
+            --border-radius: 12px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-attachment: fixed;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .main-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,0.15);
+        }
+
+        .search-box {
+            display: flex;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .search-input {
+            padding: 0.7rem 1.2rem;
+            border: none;
+            outline: none;
+            width: 250px;
+            font-size: 1rem;
+        }
+
+        .search-btn {
+            background: var(--accent);
+            color: var(--dark);
+            border: none;
+            padding: 0.7rem 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .search-btn:hover {
+            background: #e6b800;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: url('https://images.unsplash.com/photo-1542779283-429940ce8336?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center;
+            background-size: cover;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: block;
+            color: var(--accent);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            margin-top: -30px;
+            position: relative;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+            padding: 3rem 0;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--accent);
+        }
+
+        .view-all {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .view-all:hover {
+            color: var(--secondary-dark);
+            text-decoration: underline;
+        }
+
+        /* Pokedex Grid */
+        .pokedex-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .pokemon-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+            border: 3px solid transparent;
+        }
+
+        .pokemon-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            border-color: var(--accent);
+        }
+
+        .pokemon-image {
+            height: 150px;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .pokemon-image img {
+            max-width: 100%;
+            max-height: 120px;
+            transition: var(--transition);
+        }
+
+        .pokemon-card:hover .pokemon-image img {
+            transform: scale(1.1);
+        }
+
+        .pokemon-info {
+            padding: 1rem;
+        }
+
+        .pokemon-id {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 0.3rem;
+        }
+
+        .pokemon-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .pokemon-types {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .type-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .type-grass { background: var(--grass); }
+        .type-fire { background: var(--fire); }
+        .type-water { background: var(--water); }
+        .type-electric { background: var(--electric); }
+
+        /* Games Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .game-image {
+            height: 180px;
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .game-info {
+            padding: 1.5rem;
+        }
+
+        .game-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .game-description {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .game-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-badge {
+            background: var(--light);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* News Grid */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .news-image {
+            height: 180px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .news-content {
+            padding: 1.5rem;
+        }
+
+        .news-date {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .news-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .news-excerpt {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        /* Guides */
+        .guides-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .guide-item {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-left: 4px solid var(--accent);
+        }
+
+        .guide-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .guide-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--dark);
+        }
+
+        .guide-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .guide-excerpt {
+            color: var(--gray);
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .main-footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .pokedex-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .search-box {
+                width: 100%;
+                max-width: 400px;
+            }
+            
+            .search-input {
+                width: 100%;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-stats {
+                gap: 2rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .pokedex-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+            
+            .games-grid, .news-grid, .guides-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <i class="fas fa-dragon logo-icon"></i>
+                    <span class="logo-text">PokéWiki</span>
+                </a>
+                
+                <nav class="nav-links">
+                    <a href="#" class="nav-link active">Inicio</a>
+                    <a href="#" class="nav-link">Pokédex</a>
+                    <a href="#" class="nav-link">Juegos</a>
+                    <a href="#" class="nav-link">Guías</a>
+                    <a href="#" class="nav-link">Noticias</a>
+                    <a href="#" class="nav-link">Comunidad</a>
+                </nav>
+                
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Buscar Pokémon...">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">La Enciclopedia Pokémon Definitiva</h1>
+                <p class="hero-subtitle">Descubre todo sobre tus Pokémon favoritos, juegos, estrategias y las últimas noticias del mundo Pokémon.</p>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">1025</span>
+                        <span class="stat-label">Pokémon</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">28</span>
+                        <span class="stat-label">Juegos</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">18</span>
+                        <span class="stat-label">Tipos</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">9</span>
+                        <span class="stat-label">Regiones</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Pokédex Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-book"></i> Pokédex
+                    </h2>
+                    <a href="#" class="view-all">Ver todos los Pokémon</a>
+                </div>
+                
+                <div class="pokedex-grid">
+                    <!-- Pokémon 1 -->
+                    <div class="pokemon-card">
+                        <div class="pokemon-image">
+                            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" alt="Pikachu">
+                        </div>
+                        <div class="pokemon-info">
+                            <div class="pokemon-id">#025</div>
+                            <h3 class="pokemon-name">Pikachu</h3>
+                            <div class="pokemon-types">
+                                <span class="type-badge type-electric">Eléctrico</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pokémon 2 -->
+                    <div class="pokemon-card">
+                        <div class="pokemon-image">
+                            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png" alt="Charizard">
+                        </div>
+                        <div class="pokemon-info">
+                            <div class="pokemon-id">#006</div>
+                            <h3 class="pokemon-name">Charizard</h3>
+                            <div class="pokemon-types">
+                                <span class="type-badge type-fire">Fuego</span>
+                                <span class="type-badge" style="background: #A0A0A0; color: white;">Volador</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pokémon 3 -->
+                    <div class="pokemon-card">
+                        <div class="pokemon-image">
+                            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png" alt="Venusaur">
+                        </div>
+                        <div class="pokemon-info">
+                            <div class="pokemon-id">#003</div>
+                            <h3 class="pokemon-name">Venusaur</h3>
+                            <div class="pokemon-types">
+                                <span class="type-badge type-grass">Planta</span>
+                                <span class="type-badge" style="background: #A040A0; color: white;">Veneno</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pokémon 4 -->
+                    <div class="pokemon-card">
+                        <div class="pokemon-image">
+                            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png" alt="Blastoise">
+                        </div>
+                        <div class="pokemon-info">
+                            <div class="pokemon-id">#009</div>
+                            <h3 class="pokemon-name">Blastoise</h3>
+                            <div class="pokemon-types">
+                                <span class="type-badge type-water">Agua</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pokémon 5 -->
+                    <div class="pokemon-card">
+                        <div class="pokemon-image">
+                            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png" alt="Mewtwo">
+                        </div>
+                        <div class="pokemon-info">
+                            <div class="pokemon-id">#150</div>
+                            <h3 class="pokemon-name">Mewtwo</h3>
+                            <div class="pokemon-types">
+                                <span class="type-badge" style="background: #A040A0; color: white;">Psíquico</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pokémon 6 -->
+                    <div class="pokemon-card">
+                        <div class="pokemon-image">
+                            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png" alt="Gengar">
+                        </div>
+                        <div class="pokemon-info">
+                            <div class="pokemon-id">#094</div>
+                            <h3 class="pokemon-name">Gengar</h3>
+                            <div class="pokemon-types">
+                                <span class="type-badge" style="background: #705898; color: white;">Fantasma</span>
+                                <span class="type-badge" style="background: #A040A0; color: white;">Veneno</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Games Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-gamepad"></i> Juegos Pokémon
+                    </h2>
+                    <a href="#" class="view-all">Ver todos los juegos</a>
+                </div>
+                
+                <div class="games-grid">
+                    <!-- Game 1 -->
+                    <div class="game-card">
+                        <div class="game-image">
+                            <i class="fas fa-dragon"></i>
+                        </div>
+                        <div class="game-info">
+                            <h3 class="game-title">Pokémon Escarlata y Púrpura</h3>
+                            <div class="game-meta">
+                                <span>Nintendo Switch</span>
+                                <span>2022</span>
+                            </div>
+                            <p class="game-description">Explora la región de Paldea en esta nueva aventura con Pokémon de la novena generación.</p>
+                            <div class="game-features">
+                                <span class="feature-badge">Mundo Abierto</span>
+                                <span class="feature-badge">Teracristalización</span>
+                                <span class="feature-badge">Co-op</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Game 2 -->
+                    <div class="game-card">
+                        <div class="game-image">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <div class="game-info">
+                            <h3 class="game-title">Pokémon Diamante Brillante y Perla Reluciente</h3>
+                            <div class="game-meta">
+                                <span>Nintendo Switch</span>
+                                <span>2021</span>
+                            </div>
+                            <p class="game-description">Remakes de los clásicos juegos de la región de Sinnoh con gráficos actualizados.</p>
+                            <div class="game-features">
+                                <span class="feature-badge">Remake</span>
+                                <span class="feature-badge">Sinnoh</span>
+                                <span class="feature-badge">Contests</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Game 3 -->
+                    <div class="game-card">
+                        <div class="game-image">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="game-info">
+                            <h3 class="game-title">Pokémon Espada y Escudo</h3>
+                            <div class="game-meta">
+                                <span>Nintendo Switch</span>
+                                <span>2019</span>
+                            </div>
+                            <p class="game-description">Aventúrate en la región de Galar con Dynamax y nuevas formas Gigamax.</p>
+                            <div class="game-features">
+                                <span class="feature-badge">Dynamax</span>
+                                <span class="feature-badge">Wild Area</span>
+                                <span class="feature-badge">Raids</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Guides Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-graduation-cap"></i> Guías y Estrategias
+                    </h2>
+                    <a href="#" class="view-all">Ver todas las guías</a>
+                </div>
+                
+                <div class="guides-list">
+                    <!-- Guide 1 -->
+                    <div class="guide-item">
+                        <h3 class="guide-title">Guía de Tipos y Efectividades</h3>
+                        <div class="guide-meta">
+                            <span><i class="fas fa-clock"></i> 15 min lectura</span>
+                            <span><i class="fas fa-chart-line"></i> Avanzado</span>
+                        </div>
+                        <p class="guide-excerpt">Aprende todo sobre las ventajas y desventajas de los 18 tipos Pokémon para dominar las batallas.</p>
+                    </div>
+                    
+                    <!-- Guide 2 -->
+                    <div class="guide-item">
+                        <h3 class="guide-title">Cómo Criar Pokémon Competitivos</h3>
+                        <div class="guide-meta">
+                            <span><i class="fas fa-clock"></i> 25 min lectura</span>
+                            <span><i class="fas fa-chart-line"></i> Experto</span>
+                        </div>
+                        <p class="guide-excerpt">Domina las técnicas de cría para obtener Pokémon con IVs perfectos y movimientos egg moves.</p>
+                    </div>
+                    
+                    <!-- Guide 3 -->
+                    <div class="guide-item">
+                        <h3 class="guide-title">Guía de Inicio para Principiantes</h3>
+                        <div class="guide-meta">
+                            <span><i class="fas fa-clock"></i> 10 min lectura</span>
+                            <span><i class="fas fa-chart-line"></i> Principiante</span>
+                        </div>
+                        <p class="guide-excerpt">Todo lo que necesitas saber para comenzar tu aventura Pokémon desde cero.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- News Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-newspaper"></i> Últimas Noticias
+                    </h2>
+                    <a href="#" class="view-all">Ver todas las noticias</a>
+                </div>
+                
+                <div class="news-grid">
+                    <!-- News 1 -->
+                    <div class="news-card">
+                        <div class="news-image">
+                            <i class="fas fa-tv"></i>
+                        </div>
+                        <div class="news-content">
+                            <div class="news-date">27 de Febrero, 2024</div>
+                            <h3 class="news-title">Nuevo Pokémon Presents anuncia DLC para Escarlata y Púrpura</h3>
+                            <p class="news-excerpt">The Pokémon Company revela nuevos detalles sobre la expansión "La Máscara Turquesa" con nuevas áreas y Pokémon.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- News 2 -->
+                    <div class="news-card">
+                        <div class="news-image">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="news-content">
+                            <div class="news-date">15 de Febrero, 2024</div>
+                            <h3 class="news-title">Pokémon GO festeja su 8º aniversario con eventos especiales</h3>
+                            <p class="news-excerpt">Niantic anuncia una semana de celebración con Pokémon raros, recompensas especiales y nuevos desafíos.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- News 3 -->
+                    <div class="news-card">
+                        <div class="news-image">
+                            <i class="fas fa-film"></i>
+                        </div>
+                        <div class="news-content">
+                            <div class="news-date">5 de Febrero, 2024</div>
+                            <h3 class="news-title">Nueva temporada del anime Pokémon con nuevos protagonistas</h3>
+                            <p class="news-excerpt">La serie continúa con Liko y Roy explorando diferentes regiones en busca de misteriosos Pokémon.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>PokéWiki</h3>
+                    <p>La enciclopedia Pokémon más completa en español. Información actualizada sobre todos los juegos, Pokémon, estrategias y noticias.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Secciones</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Pokédex Nacional</a></li>
+                        <li><a href="#">Juegos por Generación</a></li>
+                        <li><a href="#">Guías de Batalla</a></li>
+                        <li><a href="#">Noticias y Actualizaciones</a></li>
+                        <li><a href="#">Comunidad</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Recursos</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Calculadora de Daño</a></li>
+                        <li><a href="#">Buscador de Debilidades</a></li>
+                        <li><a href="#">Team Builder</a></li>
+                        <li><a href="#">Mapas Interactivos</a></li>
+                        <li><a href="#">Base de Datos de Movimientos</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Términos de Uso</a></li>
+                        <li><a href="#">Política de Privacidad</a></li>
+                        <li><a href="#">Cookies</a></li>
+                        <li><a href="#">Aviso Legal</a></li>
+                        <li><a href="#">Contacto</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>PokéWiki es un sitio de fans. Pokémon y todos los nombres relacionados son marcas registradas de Nintendo, The Pokémon Company y Game Freak. Este sitio no está afiliado oficialmente.</p>
+                <p>&copy; 2024 PokéWiki. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Funcionalidad básica para la búsqueda
+        document.querySelector('.search-btn').addEventListener('click', function() {
+            const searchTerm = document.querySelector('.search-input').value;
+            if (searchTerm.trim() !== '') {
+                alert(`Buscando: ${searchTerm}`);
+                // Aquí iría la lógica real de búsqueda
+            }
+        });
+
+        document.querySelector('.search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.querySelector('.search-btn').click();
+            }
+        });
+
+        // Efectos de hover para las tarjetas
+        document.querySelectorAll('.pokemon-card, .game-card, .news-card, .guide-item').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = this.classList.contains('pokemon-card') 
+                    ? 'translateY(-10px) scale(1.02)' 
+                    : 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Simular carga de más contenido
+        document.querySelectorAll('.view-all').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Esta funcionalidad cargaría más contenido en una implementación real');
+            });
+        });
+    </script>
+</body>
+</html>
