@@ -1,7 +1,899 @@
-{% for Pokemon in Pokemones %}
+{% extends 'includes/navbar.html' %}
 
-    {{ Pokemon.nombre }}
-    {{Pokemon.decripcion}}
-    {{pokemon.imagen}}
+{% block content %}
 
-{% endfor %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokéWiki - Enciclopedia Pokémon</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Variables y reset */
+        :root {
+            --primary: #DC0A2D;
+            --primary-dark: #A0051C;
+            --primary-light: #FF3B5C;
+            --secondary: #2A75BB;
+            --secondary-dark: #1C5A9B;
+            --accent: #FFCB05;
+            --dark: #1E1E1E;
+            --light: #F5F5F5;
+            --gray: #6C757D;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --electric: #FFDE00;
+            --water: #4592C4;
+            --fire: #FD7D24;
+            --grass: #9BCC50;
+            --poison: #A040A0;
+            --flying: #A0A0A0;
+            --psychic: #A040A0;
+            --ghost: #705898;
+            --ice: #98D8D8;
+            --fighting: #C03028;
+            --ground: #E0C068;
+            --rock: #B8A038;
+            --bug: #A8B820;
+            --dragon: #7038F8;
+            --dark: #705848;
+            --steel: #B8B8D0;
+            --fairy: #EE99AC;
+            --normal: #A8A878;
+            --border-radius: 12px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-attachment: fixed;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Hero Section - Con margen superior para la navbar */
+        .hero {
+            background: url('https://images.unsplash.com/photo-1542779283-429940ce8336?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center;
+            background-size: cover;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+            position: relative;
+            margin-top: 0; /* Elimina el margen negativo anterior */
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: block;
+            color: var(--accent);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main Content - Ajustado para no tener margen negativo */
+        .main-content {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            margin-top: 0;
+            position: relative;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+            padding: 3rem 0;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--accent);
+        }
+
+        .view-all {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .view-all:hover {
+            color: var(--secondary-dark);
+            text-decoration: underline;
+        }
+
+        /* Pokedex Grid */
+        .pokedex-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .pokemon-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 3px solid transparent;
+        }
+
+        .pokemon-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            border-color: var(--accent);
+        }
+
+        .pokemon-header {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        }
+
+        .pokemon-image {
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+            margin-right: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .pokemon-image img {
+            max-width: 100%;
+            max-height: 100px;
+            transition: var(--transition);
+        }
+
+        .pokemon-card:hover .pokemon-image img {
+            transform: scale(1.1);
+        }
+
+        .pokemon-basic-info {
+            flex: 1;
+        }
+
+        .pokemon-id {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 0.3rem;
+        }
+
+        .pokemon-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .pokemon-types {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .type-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Colores para tipos Pokémon */
+        .type-electric { background-color: var(--electric); }
+        .type-fire { background-color: var(--fire); }
+        .type-water { background-color: var(--water); }
+        .type-grass { background-color: var(--grass); }
+        .type-poison { background-color: var(--poison); }
+        .type-flying { background-color: var(--flying); }
+        .type-psychic { background-color: var(--psychic); }
+        .type-ghost { background-color: var(--ghost); }
+
+        .pokemon-details {
+            padding: 1rem;
+        }
+
+        .pokemon-description {
+            color: var(--gray);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .pokemon-ataques {
+            margin-top: 1rem;
+        }
+
+        .ataques-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.3rem;
+        }
+
+        .ataque-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .ataque-nombre {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .ataque-datos {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .ataque-poder, .ataque-precision {
+            background: #f0f0f0;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+        }
+
+        /* Games Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .game-image {
+            height: 180px;
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .game-info {
+            padding: 1.5rem;
+        }
+
+        .game-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .game-description {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .game-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-badge {
+            background: var(--light);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .main-footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .pokedex-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 4rem 0;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-stats {
+                gap: 2rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .pokemon-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .pokemon-image {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 3rem 0;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .pokedex-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">La Enciclopedia Pokémon Definitiva</h1>
+                <p class="hero-subtitle">Descubre todo sobre tus Pokémon favoritos, juegos, estrategias y las últimas noticias del mundo Pokémon.</p>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">1025</span>
+                        <span class="stat-label">Pokémon</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">28</span>
+                        <span class="stat-label">Juegos</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">18</span>
+                        <span class="stat-label">Tipos</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">9</span>
+                        <span class="stat-label">Regiones</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Pokédex Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-book"></i> Pokédex
+                    </h2>
+                    <a href="#" class="view-all">Ver todos los Pokémon</a>
+                </div>
+                
+                <div class="pokedex-grid">
+                    <!-- Pokémon 1 - Pikachu -->
+                    <div class="pokemon-card">
+                        <div class="pokemon-header">
+                            <div class="pokemon-image">
+                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" alt="Pikachu">
+                            </div>
+                            <div class="pokemon-basic-info">
+                                <div class="pokemon-id">#025</div>
+                                <h3 class="pokemon-name">Pikachu</h3>
+                                <div class="pokemon-types">
+                                    <span class="type-badge type-electric">Eléctrico</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pokemon-details">
+                            <p class="pokemon-description">Cuando varios de estos Pokémon se juntan, su energía puede crear rayos y tormentas eléctricas.</p>
+                            <div class="pokemon-ataques">
+                                <h4 class="ataques-title">Ataques Únicos</h4>
+                                <div class="ataque-item">
+                                    <span class="ataque-nombre">Impactrueno</span>
+                                    <div class="ataque-datos">
+                                        <span class="ataque-poder">Poder: 80</span>
+                                        <span class="ataque-precision">Precisión: 100%</span>
+                                    </div>
+                                </div>
+                                <div class="ataque-item">
+                                    <span class="ataque-nombre">Bola Voltio</span>
+                                    <div class="ataque-datos">
+                                        <span class="ataque-poder">Poder: 120</span>
+                                        <span class="ataque-precision">Precisión: 50%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pokémon 2 - Charizard -->
+                    <div class="pokemon-card">
+                        <div class="pokemon-header">
+                            <div class="pokemon-image">
+                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png" alt="Charizard">
+                            </div>
+                            <div class="pokemon-basic-info">
+                                <div class="pokemon-id">#006</div>
+                                <h3 class="pokemon-name">Charizard</h3>
+                                <div class="pokemon-types">
+                                    <span class="type-badge type-fire">Fuego</span>
+                                    <span class="type-badge type-flying">Volador</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pokemon-details">
+                            <p class="pokemon-description">Escupe fuego tan caliente que funde las rocas. Puede causar incendios forestales con solo soplar.</p>
+                            <div class="pokemon-ataques">
+                                <h4 class="ataques-title">Ataques Únicos</h4>
+                                <div class="ataque-item">
+                                    <span class="ataque-nombre">Lanzallamas</span>
+                                    <div class="ataque-datos">
+                                        <span class="ataque-poder">Poder: 90</span>
+                                        <span class="ataque-precision">Precisión: 100%</span>
+                                    </div>
+                                </div>
+                                <div class="ataque-item">
+                                    <span class="ataque-nombre">Giro Fuego</span>
+                                    <div class="ataque-datos">
+                                        <span class="ataque-poder">Poder: 35</span>
+                                        <span class="ataque-precision">Precisión: 85%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pokémon 3 - Venusaur -->
+                    <div class="pokemon-card">
+                        <div class="pokemon-header">
+                            <div class="pokemon-image">
+                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png" alt="Venusaur">
+                            </div>
+                            <div class="pokemon-basic-info">
+                                <div class="pokemon-id">#003</div>
+                                <h3 class="pokemon-name">Venusaur</h3>
+                                <div class="pokemon-types">
+                                    <span class="type-badge type-grass">Planta</span>
+                                    <span class="type-badge type-poison">Veneno</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pokemon-details">
+                            <p class="pokemon-description">La planta florece cuando absorbe energía solar, lo cual le obliga a buscar siempre la luz del sol.</p>
+                            <div class="pokemon-ataques">
+                                <h4 class="ataques-title">Ataques Únicos</h4>
+                                <div class="ataque-item">
+                                    <span class="ataque-nombre">Rayo Solar</span>
+                                    <div class="ataque-datos">
+                                        <span class="ataque-poder">Poder: 120</span>
+                                        <span class="ataque-precision">Precisión: 100%</span>
+                                    </div>
+                                </div>
+                                <div class="ataque-item">
+                                    <span class="ataque-nombre">Drenadoras</span>
+                                    <div class="ataque-datos">
+                                        <span class="ataque-poder">Poder: 75</span>
+                                        <span class="ataque-precision">Precisión: 100%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pokémon 4 - Blastoise -->
+                    <div class="pokemon-card">
+                        <div class="pokemon-header">
+                            <div class="pokemon-image">
+                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png" alt="Blastoise">
+                            </div>
+                            <div class="pokemon-basic-info">
+                                <div class="pokemon-id">#009</div>
+                                <h3 class="pokemon-name">Blastoise</h3>
+                                <div class="pokemon-types">
+                                    <span class="type-badge type-water">Agua</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pokemon-details">
+                            <p class="pokemon-description">Un Pokémon brutal con reactores de agua en su caparazón. Los chorros de agua que dispara perforan el acero.</p>
+                            <div class="pokemon-ataques">
+                                <h4 class="ataques-title">Ataques Únicos</h4>
+                                <div class="ataque-item">
+                                    <span class="ataque-nombre">Hidrobomba</span>
+                                    <div class="ataque-datos">
+                                        <span class="ataque-poder">Poder: 110</span>
+                                        <span class="ataque-precision">Precisión: 80%</span>
+                                    </div>
+                                </div>
+                                <div class="ataque-item">
+                                    <span class="ataque-nombre">Pistola Agua</span>
+                                    <div class="ataque-datos">
+                                        <span class="ataque-poder">Poder: 40</span>
+                                        <span class="ataque-precision">Precisión: 100%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pokémon 5 - Mewtwo -->
+                    <div class="pokemon-card">
+                        <div class="pokemon-header">
+                            <div class="pokemon-image">
+                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png" alt="Mewtwo">
+                            </div>
+                            <div class="pokemon-basic-info">
+                                <div class="pokemon-id">#150</div>
+                                <h3 class="pokemon-name">Mewtwo</h3>
+                                <div class="pokemon-types">
+                                    <span class="type-badge type-psychic">Psíquico</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pokemon-details">
+                            <p class="pokemon-description">Fue creado por recombinación genética de Mew. Su ADN es casi el mismo, pero su tamaño y carácter son muy diferentes.</p>
+                            <div class="pokemon-ataques">
+                                <h4 class="ataques-title">Ataques Únicos</h4>
+                                <div class="ataque-item">
+                                    <span class="ataque-nombre">Psíquico</span>
+                                    <div class="ataque-datos">
+                                        <span class="ataque-poder">Poder: 90</span>
+                                        <span class="ataque-precision">Precisión: 100%</span>
+                                    </div>
+                                </div>
+                                <div class="ataque-item">
+                                    <span class="ataque-nombre">Confusión</span>
+                                    <div class="ataque-datos">
+                                        <span class="ataque-poder">Poder: 50</span>
+                                        <span class="ataque-precision">Precisión: 100%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pokémon 6 - Gengar -->
+                    <div class="pokemon-card">
+                        <div class="pokemon-header">
+                            <div class="pokemon-image">
+                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png" alt="Gengar">
+                            </div>
+                            <div class="pokemon-basic-info">
+                                <div class="pokemon-id">#094</div>
+                                <h3 class="pokemon-name">Gengar</h3>
+                                <div class="pokemon-types">
+                                    <span class="type-badge type-ghost">Fantasma</span>
+                                    <span class="type-badge type-poison">Veneno</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pokemon-details">
+                            <p class="pokemon-description">Se oculta en la sombra de las personas para robarles el calor. Su presencia hace bajar la temperatura.</p>
+                            <div class="pokemon-ataques">
+                                <h4 class="ataques-title">Ataques Únicos</h4>
+                                <div class="ataque-item">
+                                    <span class="ataque-nombre">Bola Sombra</span>
+                                    <div class="ataque-datos">
+                                        <span class="ataque-poder">Poder: 80</span>
+                                        <span class="ataque-precision">Precisión: 100%</span>
+                                    </div>
+                                </div>
+                                <div class="ataque-item">
+                                    <span class="ataque-nombre">Rayo Confuso</span>
+                                    <div class="ataque-datos">
+                                        <span class="ataque-poder">Poder: 50</span>
+                                        <span class="ataque-precision">Precisión: 100%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Games Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-gamepad"></i> Juegos Pokémon
+                    </h2>
+                    <a href="#" class="view-all">Ver todos los juegos</a>
+                </div>
+                
+                <div class="games-grid">
+                    <!-- Game 1 -->
+                    <div class="game-card">
+                        <div class="game-image">
+                            <i class="fas fa-dragon"></i>
+                        </div>
+                        <div class="game-info">
+                            <h3 class="game-title">Pokémon Escarlata y Púrpura</h3>
+                            <div class="game-meta">
+                                <span>Nintendo Switch</span>
+                                <span>2022</span>
+                            </div>
+                            <p class="game-description">Explora la región de Paldea en esta nueva aventura con Pokémon de la novena generación.</p>
+                            <div class="game-features">
+                                <span class="feature-badge">Mundo Abierto</span>
+                                <span class="feature-badge">Teracristalización</span>
+                                <span class="feature-badge">Co-op</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Game 2 -->
+                    <div class="game-card">
+                        <div class="game-image">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <div class="game-info">
+                            <h3 class="game-title">Pokémon Diamante Brillante y Perla Reluciente</h3>
+                            <div class="game-meta">
+                                <span>Nintendo Switch</span>
+                                <span>2021</span>
+                            </div>
+                            <p class="game-description">Remakes de los clásicos juegos de la región de Sinnoh con gráficos actualizados.</p>
+                            <div class="game-features">
+                                <span class="feature-badge">Remake</span>
+                                <span class="feature-badge">Sinnoh</span>
+                                <span class="feature-badge">Contests</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Game 3 -->
+                    <div class="game-card">
+                        <div class="game-image">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="game-info">
+                            <h3 class="game-title">Pokémon Espada y Escudo</h3>
+                            <div class="game-meta">
+                                <span>Nintendo Switch</span>
+                                <span>2019</span>
+                            </div>
+                            <p class="game-description">Aventúrate en la región de Galar con Dynamax y nuevas formas Gigamax.</p>
+                            <div class="game-features">
+                                <span class="feature-badge">Dynamax</span>
+                                <span class="feature-badge">Wild Area</span>
+                                <span class="feature-badge">Raids</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>PokéWiki</h3>
+                    <p>La enciclopedia Pokémon más completa en español. Información actualizada sobre todos los juegos, Pokémon, estrategias y noticias.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>PokéWiki es un sitio de fans. Pokémon y todos los nombres relacionados son marcas registradas de Nintendo, The Pokémon Company y Game Freak. Este sitio no está afiliado oficialmente.</p>
+                <p>&copy; 2024 PokéWiki. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Efectos de hover para las tarjetas
+        document.querySelectorAll('.pokemon-card, .game-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = this.classList.contains('pokemon-card') 
+                    ? 'translateY(-10px) scale(1.02)' 
+                    : 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Simular carga de más contenido
+        document.querySelectorAll('.view-all').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Esta funcionalidad cargaría más contenido en una implementación real');
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

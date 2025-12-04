@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos Pokémon - PokéWiki</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Variables y reset */
+        :root {
+            --primary: #DC0A2D;
+            --primary-dark: #A0051C;
+            --primary-light: #FF3B5C;
+            --accent: #FFCB05;
+            --success: #28a745;
+            --water: #4D90D5;
+            --fire: #FF9C54;
+            --grass: #63BB5B;
+            --electric: #F3D23B;
+            --psychic: #F97176;
+            --ice: #74CEC0;
+            --dark: #1E1E1E;
+            --light: #F5F5F5;
+            --gray: #6C757D;
+            --gray-light: #E9ECEF;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+            padding: 1rem 0;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            color: var(--accent);
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            list-style: none;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.8rem 1.2rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover {
+            color: white;
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+        }
+
+        .create-btn {
+            background: var(--accent);
+            color: var(--dark);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .create-btn:hover {
+            background: #e6b800;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 203, 5, 0.3);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .login-btn {
+            background: transparent;
+            color: white;
+            border: 2px solid var(--accent);
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .login-btn:hover {
+            background: var(--accent);
+            color: var(--dark);
+            transform: translateY(-2px);
+        }
+
+        .register-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .register-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        .logout-btn {
+            background: var(--accent);
+            color: var(--dark);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn:hover {
+            background: #e6b800;
+            transform: translateY(-2px);
+        }
+
+        .user-welcome {
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-welcome i {
+            color: var(--accent);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--water) 0%, #2A75BB 100%);
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+            color: white;
+            text-align: center;
+        }
+
+        .page-header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Games Container */
+        .games-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px 4rem;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .filter-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--gray-light);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-btn:hover {
+            background: #d1d9e0;
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .search-box {
+            position: relative;
+            min-width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 3rem;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(220, 10, 45, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        /* Games Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Game Card */
+        .game-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        .game-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .game-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent);
+            color: var(--dark);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .game-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .game-generation {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .game-description {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            flex: 1;
+        }
+
+        .game-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .game-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .game-detail i {
+            color: var(--primary);
+        }
+
+        .game-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .game-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .game-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .game-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 10, 45, 0.3);
+        }
+
+        /* Generation Sections */
+        .generation-section {
+            margin-bottom: 4rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .section-count {
+            background: var(--gray-light);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Colors for different generations */
+        .gen-1 { border-color: var(--fire); }
+        .gen-1 .section-title { color: var(--fire); }
+        
+        .gen-2 { border-color: var(--grass); }
+        .gen-2 .section-title { color: var(--grass); }
+        
+        .gen-3 { border-color: var(--water); }
+        .gen-3 .section-title { color: var(--water); }
+        
+        .gen-4 { border-color: var(--electric); }
+        .gen-4 .section-title { color: var(--electric); }
+        
+        .gen-5 { border-color: var(--psychic); }
+        .gen-5 .section-title { color: var(--psychic); }
+        
+        .gen-6 { border-color: #A0522D; }
+        .gen-6 .section-title { color: #A0522D; }
+        
+        .gen-7 { border-color: var(--ice); }
+        .gen-7 .section-title { color: var(--ice); }
+        
+        .gen-8 { border-color: #9B59B6; }
+        .gen-8 .section-title { color: #9B59B6; }
+        
+        .gen-9 { border-color: #E74C3C; }
+        .gen-9 .section-title { color: #E74C3C; }
+
+        /* Platform Tags */
+        .platform-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .nintendo { background: #E60012; color: white; }
+        .game-boy { background: #8BAC0F; color: white; }
+        .switch { background: #E60012; color: white; }
+        .ds { background: #0071B9; color: white; }
+        .mobile { background: #34A853; color: white; }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: var(--gray-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+        }
+
+        .pagination-btn {
+            background: white;
+            border: 2px solid var(--gray-light);
+            padding: 0.6rem 1rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .pagination-btn:hover {
+            background: var(--gray-light);
+        }
+
+        .pagination-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Hamburger Menu (Mobile) */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+                width: 100%;
+                height: calc(100vh - 70px);
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                padding-top: 2rem;
+                gap: 0;
+                transition: var(--transition);
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-item {
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-link {
+                padding: 1.2rem;
+                width: 100%;
+                justify-content: center;
+                border-radius: 0;
+            }
+
+            .create-btn {
+                width: 90%;
+                justify-content: center;
+                margin: 0.5rem auto;
+            }
+
+            .auth-buttons {
+                flex-direction: column;
+                width: 100%;
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .login-btn, .register-btn, .logout-btn {
+                width: 90%;
+                justify-content: center;
+                margin: 0 auto;
+            }
+
+            .user-welcome {
+                justify-content: center;
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 2.2rem;
+            }
+
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            .section-title {
+                font-size: 1.7rem;
+            }
+
+            /* Hamburger animation */
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(6px, 6px);
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(6px, -6px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 0 15px;
+            }
+
+            .logo-text {
+                font-size: 1.3rem;
+            }
+
+            .logo-icon {
+                font-size: 1.7rem;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .game-footer {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .game-btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Logo -->
+            <a href="{% url 'lista_pokemones' %}" class="nav-logo">
+                <i class="fas fa-dragon logo-icon"></i>
+                <span class="logo-text">PokéWiki</span>
+            </a>
+
+            <!-- Hamburger Menu (Mobile) -->
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <!-- Navigation Menu -->
+            <ul class="nav-menu" id="nav-menu">
+                <!-- Navegación Principal -->
+                <li class="nav-item">
+                    <a href="{% url 'lista_pokemones' %}" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        Inicio
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="{% url 'Pokedex' %}" class="nav-link">
+                        <i class="fas fa-book"></i>
+                        Pokédex
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="{% url 'juegos' %}" class="nav-link active">
+                        <i class="fas fa-gamepad"></i>
+                        Juegos
+                    </a>
+                </li>
+
+                <!-- Botón Crear -->
+                <li class="nav-item">
+                    <a href="{% url 'pokemon_create' %}" class="create-btn">
+                        <i class="fas fa-plus-circle"></i>
+                        Añadir Pokémon
+                    </a>
+                </li>
+
+                <!-- Authentication Section -->
+                <div class="auth-buttons">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <span class="user-welcome">
+                                <i class="fas fa-user"></i>
+                                Hola, {{ user.username }}
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="logout-btn">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Cerrar Sesión
+                                </button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <button type="button" class="login-btn" id="openLoginModal">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Iniciar Sesión
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button type="button" class="register-btn" id="openRegisterModal">
+                                <i class="fas fa-user-plus"></i>
+                                Registrarse
+                            </button>
+                        </li>
+                    {% endif %}
+                </div>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="page-header-content">
+            <h1 class="page-title">
+                <i class="fas fa-gamepad"></i>
+                Juegos Pokémon
+            </h1>
+            <p class="page-subtitle">
+                Explora toda la colección de juegos de la franquicia Pokémon, desde las clásicas entregas de Game Boy hasta los últimos lanzamientos para Nintendo Switch.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="games-container">
+        <!-- Filter Section -->
+        <section class="filter-section">
+            <div class="filter-title">
+                <i class="fas fa-filter"></i>
+                Filtros
+            </div>
+            
+            <div class="filter-group">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-th-large"></i>
+                    Todos
+                </button>
+                <button class="filter-btn" data-filter="main">
+                    <i class="fas fa-star"></i>
+                    Saga Principal
+                </button>
+                <button class="filter-btn" data-filter="spin-off">
+                    <i class="fas fa-gamepad"></i>
+                    Spin-offs
+                </button>
+                <button class="filter-btn" data-filter="remake">
+                    <i class="fas fa-sync-alt"></i>
+                    Remakes
+                </button>
+            </div>
+            
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Buscar juegos..." id="gameSearch">
+            </div>
+        </section>
+
+        <!-- Generation 1: Rojo/Azul/Amarillo -->
+        <section class="generation-section">
+            <div class="section-header gen-1">
+                <h2 class="section-title">Generación I</h2>
+                <span class="section-count">3 juegos</span>
+            </div>
+            
+            <div class="games-grid">
+                <!-- Pokémon Rojo -->
+                <div class="game-card" data-type="main" data-gen="1">
+                    <div class="game-image" style="background: linear-gradient(135deg, #E60012 0%, #A0051C 100%);">
+                        <span class="game-badge">
+                            <i class="fas fa-star"></i>
+                            Principal
+                        </span>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Pokémon Rojo</h3>
+                        <div class="game-generation">
+                            <i class="fas fa-fire"></i>
+                            Generación I • 1996
+                        </div>
+                        <p class="game-description">
+                            El juego que empezó todo. Viaja por la región de Kanto capturando Pokémon y desafiando a los líderes de gimnasio.
+                        </p>
+                        <div class="game-details">
+                            <div class="game-detail">
+                                <i class="fas fa-gamepad"></i>
+                                <span class="platform-tag game-boy">Game Boy</span>
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-clock"></i>
+                                40+ horas
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-users"></i>
+                                1 jugador
+                            </div>
+                        </div>
+                        <div class="game-footer">
+                            <span class="game-price">Clásico</span>
+                            <a href="#" class="game-btn">
+                                <i class="fas fa-info-circle"></i>
+                                Ver detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pokémon Azul -->
+                <div class="game-card" data-type="main" data-gen="1">
+                    <div class="game-image" style="background: linear-gradient(135deg, #4D90D5 0%, #2A75BB 100%);">
+                        <span class="game-badge">
+                            <i class="fas fa-star"></i>
+                            Principal
+                        </span>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Pokémon Azul</h3>
+                        <div class="game-generation">
+                            <i class="fas fa-water"></i>
+                            Generación I • 1996
+                        </div>
+                        <p class="game-description">
+                            Edición especial con Pokémon exclusivos y gráficos mejorados respecto a la versión Rojo.
+                        </p>
+                        <div class="game-details">
+                            <div class="game-detail">
+                                <i class="fas fa-gamepad"></i>
+                                <span class="platform-tag game-boy">Game Boy</span>
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-clock"></i>
+                                40+ horas
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-users"></i>
+                                1 jugador
+                            </div>
+                        </div>
+                        <div class="game-footer">
+                            <span class="game-price">Clásico</span>
+                            <a href="#" class="game-btn">
+                                <i class="fas fa-info-circle"></i>
+                                Ver detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pokémon Amarillo -->
+                <div class="game-card" data-type="main" data-gen="1">
+                    <div class="game-image" style="background: linear-gradient(135deg, #FFCB05 0%, #E6B800 100%);">
+                        <span class="game-badge">
+                            <i class="fas fa-star"></i>
+                            Especial
+                        </span>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Pokémon Amarillo</h3>
+                        <div class="game-generation">
+                            <i class="fas fa-bolt"></i>
+                            Generación I • 1998
+                        </div>
+                        <p class="game-description">
+                            Edición especial inspirada en el anime, con Pikachu como Pokémon inicial que te sigue durante toda la aventura.
+                        </p>
+                        <div class="game-details">
+                            <div class="game-detail">
+                                <i class="fas fa-gamepad"></i>
+                                <span class="platform-tag game-boy">Game Boy</span>
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-clock"></i>
+                                45+ horas
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-users"></i>
+                                1 jugador
+                            </div>
+                        </div>
+                        <div class="game-footer">
+                            <span class="game-price">Clásico</span>
+                            <a href="#" class="game-btn">
+                                <i class="fas fa-info-circle"></i>
+                                Ver detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Generation 2: Oro/Plata/Cristal -->
+        <section class="generation-section">
+            <div class="section-header gen-2">
+                <h2 class="section-title">Generación II</h2>
+                <span class="section-count">3 juegos</span>
+            </div>
+            
+            <div class="games-grid">
+                <!-- Pokémon Oro -->
+                <div class="game-card" data-type="main" data-gen="2">
+                    <div class="game-image" style="background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);">
+                        <span class="game-badge">
+                            <i class="fas fa-star"></i>
+                            Principal
+                        </span>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Pokémon Oro</h3>
+                        <div class="game-generation">
+                            <i class="fas fa-sun"></i>
+                            Generación II • 1999
+                        </div>
+                        <p class="game-description">
+                            Explora la región de Johto con nuevas especies de Pokémon y un sistema día/noche que afecta al gameplay.
+                        </p>
+                        <div class="game-details">
+                            <div class="game-detail">
+                                <i class="fas fa-gamepad"></i>
+                                <span class="platform-tag game-boy">Game Boy Color</span>
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-clock"></i>
+                                50+ horas
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-users"></i>
+                                1 jugador
+                            </div>
+                        </div>
+                        <div class="game-footer">
+                            <span class="game-price">Clásico</span>
+                            <a href="#" class="game-btn">
+                                <i class="fas fa-info-circle"></i>
+                                Ver detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pokémon Plata -->
+                <div class="game-card" data-type="main" data-gen="2">
+                    <div class="game-image" style="background: linear-gradient(135deg, #C0C0C0 0%, #808080 100%);">
+                        <span class="game-badge">
+                            <i class="fas fa-star"></i>
+                            Principal
+                        </span>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Pokémon Plata</h3>
+                        <div class="game-generation">
+                            <i class="fas fa-moon"></i>
+                            Generación II • 1999
+                        </div>
+                        <p class="game-description">
+                            Versión complementaria a Oro con Pokémon exclusivos y la posibilidad de visitar Kanto después de completar la historia principal.
+                        </p>
+                        <div class="game-details">
+                            <div class="game-detail">
+                                <i class="fas fa-gamepad"></i>
+                                <span class="platform-tag game-boy">Game Boy Color</span>
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-clock"></i>
+                                50+ horas
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-users"></i>
+                                1 jugador
+                            </div>
+                        </div>
+                        <div class="game-footer">
+                            <span class="game-price">Clásico</span>
+                            <a href="#" class="game-btn">
+                                <i class="fas fa-info-circle"></i>
+                                Ver detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pokémon Cristal -->
+                <div class="game-card" data-type="main" data-gen="2">
+                    <div class="game-image" style="background: linear-gradient(135deg, #4FD0E7 0%, #00B4D8 100%);">
+                        <span class="game-badge">
+                            <i class="fas fa-star"></i>
+                            Especial
+                        </span>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Pokémon Cristal</h3>
+                        <div class="game-generation">
+                            <i class="fas fa-gem"></i>
+                            Generación II • 2000
+                        </div>
+                        <p class="game-description">
+                            Edición mejorada con animaciones en los combates, la posibilidad de elegir género del protagonista y más contenido.
+                        </p>
+                        <div class="game-details">
+                            <div class="game-detail">
+                                <i class="fas fa-gamepad"></i>
+                                <span class="platform-tag game-boy">Game Boy Color</span>
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-clock"></i>
+                                55+ horas
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-users"></i>
+                                1 jugador
+                            </div>
+                        </div>
+                        <div class="game-footer">
+                            <span class="game-price">Clásico</span>
+                            <a href="#" class="game-btn">
+                                <i class="fas fa-info-circle"></i>
+                                Ver detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Generation 3: Rubí/Zafiro/Esmeralda -->
+        <section class="generation-section">
+            <div class="section-header gen-3">
+                <h2 class="section-title">Generación III</h2>
+                <span class="section-count">5 juegos</span>
+            </div>
+            
+            <div class="games-grid">
+                <!-- Pokémon Rubí -->
+                <div class="game-card" data-type="main" data-gen="3">
+                    <div class="game-image" style="background: linear-gradient(135deg, #E60012 0%, #A0051C 100%);">
+                        <span class="game-badge">
+                            <i class="fas fa-star"></i>
+                            Principal
+                        </span>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Pokémon Rubí</h3>
+                        <div class="game-generation">
+                            <i class="fas fa-gem"></i>
+                            Generación III • 2002
+                        </div>
+                        <p class="game-description">
+                            Aventúrate en la región de Hoenn con gráficos a color mejorados y el nuevo sistema de habilidades Pokémon.
+                        </p>
+                        <div class="game-details">
+                            <div class="game-detail">
+                                <i class="fas fa-gamepad"></i>
+                                <span class="platform-tag game-boy">Game Boy Advance</span>
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-clock"></i>
+                                60+ horas
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-users"></i>
+                                1-2 jugadores
+                            </div>
+                        </div>
+                        <div class="game-footer">
+                            <span class="game-price">Clásico</span>
+                            <a href="#" class="game-btn">
+                                <i class="fas fa-info-circle"></i>
+                                Ver detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pokémon Zafiro -->
+                <div class="game-card" data-type="main" data-gen="3">
+                    <div class="game-image" style="background: linear-gradient(135deg, #4D90D5 0%, #2A75BB 100%);">
+                        <span class="game-badge">
+                            <i class="fas fa-star"></i>
+                            Principal
+                        </span>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Pokémon Zafiro</h3>
+                        <div class="game-generation">
+                            <i class="fas fa-gem"></i>
+                            Generación III • 2002
+                        </div>
+                        <p class="game-description">
+                            Versión complementaria a Rubí con Pokémon exclusivos y el legendario Kyogre como mascota.
+                        </p>
+                        <div class="game-details">
+                            <div class="game-detail">
+                                <i class="fas fa-gamepad"></i>
+                                <span class="platform-tag game-boy">Game Boy Advance</span>
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-clock"></i>
+                                60+ horas
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-users"></i>
+                                1-2 jugadores
+                            </div>
+                        </div>
+                        <div class="game-footer">
+                            <span class="game-price">Clásico</span>
+                            <a href="#" class="game-btn">
+                                <i class="fas fa-info-circle"></i>
+                                Ver detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pokémon Esmeralda -->
+                <div class="game-card" data-type="main" data-gen="3">
+                    <div class="game-image" style="background: linear-gradient(135deg, #50C878 0%, #228B22 100%);">
+                        <span class="game-badge">
+                            <i class="fas fa-star"></i>
+                            Especial
+                        </span>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Pokémon Esmeralda</h3>
+                        <div class="game-generation">
+                            <i class="fas fa-gem"></i>
+                            Generación III • 2004
+                        </div>
+                        <p class="game-description">
+                            Edición definitiva de la tercera generación con historia expandida, Frente Batalla y ambos equipos enemigos.
+                        </p>
+                        <div class="game-details">
+                            <div class="game-detail">
+                                <i class="fas fa-gamepad"></i>
+                                <span class="platform-tag game-boy">Game Boy Advance</span>
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-clock"></i>
+                                70+ horas
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-users"></i>
+                                1-2 jugadores
+                            </div>
+                        </div>
+                        <div class="game-footer">
+                            <span class="game-price">Clásico</span>
+                            <a href="#" class="game-btn">
+                                <i class="fas fa-info-circle"></i>
+                                Ver detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spin-off Games Section -->
+        <section class="generation-section">
+            <div class="section-header" style="border-color: #9B59B6;">
+                <h2 class="section-title" style="color: #9B59B6;">Spin-offs</h2>
+                <span class="section-count">4 juegos</span>
+            </div>
+            
+            <div class="games-grid">
+                <!-- Pokémon GO -->
+                <div class="game-card" data-type="spin-off" data-gen="mobile">
+                    <div class="game-image" style="background: linear-gradient(135deg, #4D90D5 0%, #2A75BB 100%);">
+                        <span class="game-badge">
+                            <i class="fas fa-mobile-alt"></i>
+                            Móvil
+                        </span>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Pokémon GO</h3>
+                        <div class="game-generation">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Realidad Aumentada • 2016
+                        </div>
+                        <p class="game-description">
+                            Juego de realidad aumentada que te permite capturar Pokémon en el mundo real usando tu dispositivo móvil.
+                        </p>
+                        <div class="game-details">
+                            <div class="game-detail">
+                                <i class="fas fa-gamepad"></i>
+                                <span class="platform-tag mobile">iOS/Android</span>
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-clock"></i>
+                                Continuo
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-users"></i>
+                                Multijugador
+                            </div>
+                        </div>
+                        <div class="game-footer">
+                            <span class="game-price">Gratuito</span>
+                            <a href="#" class="game-btn">
+                                <i class="fas fa-info-circle"></i>
+                                Ver detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pokémon: Let's Go -->
+                <div class="game-card" data-type="spin-off" data-gen="8">
+                    <div class="game-image" style="background: linear-gradient(135deg, #FFCB05 0%, #E6B800 100%);">
+                        <span class="game-badge">
+                            <i class="fas fa-redo"></i>
+                            Reimaginación
+                        </span>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Pokémon: Let's Go, Pikachu!</h3>
+                        <div class="game-generation">
+                            <i class="fas fa-sync-alt"></i>
+                            Switch • 2018
+                        </div>
+                        <p class="game-description">
+                            Reimaginación de Pokémon Amarillo para Nintendo Switch con mecánicas de Pokémon GO y gráficos 3D.
+                        </p>
+                        <div class="game-details">
+                            <div class="game-detail">
+                                <i class="fas fa-gamepad"></i>
+                                <span class="platform-tag switch">Nintendo Switch</span>
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-clock"></i>
+                                30+ horas
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-users"></i>
+                                1-2 jugadores
+                            </div>
+                        </div>
+                        <div class="game-footer">
+                            <span class="game-price">$59.99</span>
+                            <a href="#" class="game-btn">
+                                <i class="fas fa-shopping-cart"></i>
+                                Comprar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pokémon Snap -->
+                <div class="game-card" data-type="spin-off" data-gen="switch">
+                    <div class="game-image" style="background: linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%);">
+                        <span class="game-badge">
+                            <i class="fas fa-camera"></i>
+                            Aventura
+                        </span>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">New Pokémon Snap</h3>
+                        <div class="game-generation">
+                            <i class="fas fa-camera-retro"></i>
+                            Switch • 2021
+                        </div>
+                        <p class="game-description">
+                            Juego de fotografías donde viajas por diferentes islas para capturar a los Pokémon en su hábitat natural.
+                        </p>
+                        <div class="game-details">
+                            <div class="game-detail">
+                                <i class="fas fa-gamepad"></i>
+                                <span class="platform-tag switch">Nintendo Switch</span>
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-clock"></i>
+                                20+ horas
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-users"></i>
+                                1 jugador
+                            </div>
+                        </div>
+                        <div class="game-footer">
+                            <span class="game-price">$59.99</span>
+                            <a href="#" class="game-btn">
+                                <i class="fas fa-shopping-cart"></i>
+                                Comprar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Remakes Section -->
+        <section class="generation-section">
+            <div class="section-header" style="border-color: #E74C3C;">
+                <h2 class="section-title" style="color: #E74C3C;">Remakes</h2>
+                <span class="section-count">4 juegos</span>
+            </div>
+            
+            <div class="games-grid">
+                <!-- Pokémon HeartGold -->
+                <div class="game-card" data-type="remake" data-gen="4">
+                    <div class="game-image" style="background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);">
+                        <span class="game-badge">
+                            <i class="fas fa-redo"></i>
+                            Remake
+                        </span>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Pokémon HeartGold</h3>
+                        <div class="game-generation">
+                            <i class="fas fa-heart"></i>
+                            Remake Gen II • 2009
+                        </div>
+                        <p class="game-description">
+                            Remake de Pokémon Oro para Nintendo DS con gráficos 3D, Pokémon que te siguen y compatibilidad con Pokémon Walker.
+                        </p>
+                        <div class="game-details">
+                            <div class="game-detail">
+                                <i class="fas fa-gamepad"></i>
+                                <span class="platform-tag ds">Nintendo DS</span>
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-clock"></i>
+                                80+ horas
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-users"></i>
+                                1-2 jugadores
+                            </div>
+                        </div>
+                        <div class="game-footer">
+                            <span class="game-price">Coleccionista</span>
+                            <a href="#" class="game-btn">
+                                <i class="fas fa-info-circle"></i>
+                                Ver detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pokémon Alpha Sapphire -->
+                <div class="game-card" data-type="remake" data-gen="6">
+                    <div class="game-image" style="background: linear-gradient(135deg, #4D90D5 0%, #2A75BB 100%);">
+                        <span class="game-badge">
+                            <i class="fas fa-redo"></i>
+                            Remake
+                        </span>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Pokémon Alpha Sapphire</h3>
+                        <div class="game-generation">
+                            <i class="fas fa-water"></i>
+                            Remake Gen III • 2014
+                        </div>
+                        <p class="game-description">
+                            Remake de Pokémon Zafiro para Nintendo 3DS con gráficos completamente 3D, MegaEvoluciones y nueva historia post-game.
+                        </p>
+                        <div class="game-details">
+                            <div class="game-detail">
+                                <i class="fas fa-gamepad"></i>
+                                <span class="platform-tag ds">Nintendo 3DS</span>
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-clock"></i>
+                                50+ horas
+                            </div>
+                            <div class="game-detail">
+                                <i class="fas fa-users"></i>
+                                1-2 jugadores
+                            </div>
+                        </div>
+                        <div class="game-footer">
+                            <span class="game-price">$39.99</span>
+                            <a href="#" class="game-btn">
+                                <i class="fas fa-shopping-cart"></i>
+                                Comprar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </main>
+
+    <script>
+        // Mobile Menu Toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link, .create-btn, .login-btn, .register-btn, .logout-btn').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (event) => {
+            const isClickInsideNav = navMenu.contains(event.target) || hamburger.contains(event.target);
+            if (!isClickInsideNav && navMenu.classList.contains('active')) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Filter functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const gameCards = document.querySelectorAll('.game-card');
+        const searchInput = document.getElementById('gameSearch');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterBtns.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                btn.classList.add('active');
+                
+                const filter = btn.dataset.filter;
+                
+                // Filter games
+                gameCards.forEach(card => {
+                    if (filter === 'all') {
+                        card.style.display = 'flex';
+                    } else {
+                        if (card.dataset.type === filter) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        });
+
+        // Search functionality
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            gameCards.forEach(card => {
+                const title = card.querySelector('.game-title').textContent.toLowerCase();
+                const description = card.querySelector('.game-description').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Game card hover effects
+        gameCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.zIndex = '10';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.zIndex = '1';
+            });
+        });
+
+        // Pagination functionality
+        const paginationBtns = document.querySelectorAll('.pagination-btn');
+        paginationBtns.forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                paginationBtns.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                btn.classList.add('active');
+                
+                // Scroll to top of games
+                document.querySelector('.games-container').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add animation to game cards when they come into view
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Initially set cards for animation
+        gameCards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(card);
+        });
+
+        // Auto-hide navbar on scroll
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scroll down
+                navbar.style.transform = 'translateY(-100%)';
+            } else {
+                // Scroll up
+                navbar.style.transform = 'translateY(0)';
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+    </script>
+</body>
+</html>

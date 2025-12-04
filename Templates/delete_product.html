@@ -1,0 +1,369 @@
+{% extends 'includes/navbar.html' %}
+
+{% block title %}Eliminar {{ pokemon.nombre }} - PokéWiki{% endblock %}
+
+{% block content %}
+<div class="delete-container">
+    <div class="delete-card">
+        <!-- Icono de advertencia -->
+        <div class="warning-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+
+        <!-- Título y descripción -->
+        <h1 class="delete-title">Eliminar Pokémon</h1>
+        <p class="delete-subtitle">
+            Estás a punto de eliminar permanentemente a <strong>{{ pokemon.nombre }}</strong> del sistema. 
+            Esta acción no se puede deshacer.
+        </p>
+
+        <!-- Información del Pokémon a eliminar -->
+        <div class="pokemon-preview">
+            <div class="pokemon-header">
+                <div class="pokemon-image">
+                    {% if pokemon.imagen %}
+                        <img src="{{ pokemon.imagen.url }}" alt="{{ pokemon.nombre }}">
+                    {% else %}
+                        <div class="no-image">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="pokemon-info">
+                    <h3>{{ pokemon.nombre }} #{{ pokemon.numero_pokedex }}</h3>
+                    <div class="pokemon-types">
+                        <span class="type-badge type-{{ pokemon.tipo_primario|lower }}">{{ pokemon.tipo_primario }}</span>
+                        {% if pokemon.tipo_secundario %}
+                        <span class="type-badge type-{{ pokemon.tipo_secundario|lower }}">{{ pokemon.tipo_secundario }}</span>
+                        {% endif %}
+                    </div>
+                    <p class="pokemon-description">{{ pokemon.descripcion|truncatewords:20 }}</p>
+                </div>
+            </div>
+
+            <div class="pokemon-details">
+                <div class="detail-item">
+                    <div class="detail-label">Ataque Principal</div>
+                    <div class="detail-value">{{ pokemon.ataque_1_nombre }}</div>
+                    <div class="detail-subvalue">{{ pokemon.ataque_1_poder }} poder · {{ pokemon.ataque_1_precision }}% precisión</div>
+                </div>
+                {% if pokemon.ataque_2_nombre %}
+                <div class="detail-item">
+                    <div class="detail-label">Ataque Secundario</div>
+                    <div class="detail-value">{{ pokemon.ataque_2_nombre }}</div>
+                    <div class="detail-subvalue">{{ pokemon.ataque_2_poder }} poder · {{ pokemon.ataque_2_precision }}% precisión</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Mensaje de advertencia -->
+        <div class="warning-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <strong>¡Atención!</strong> Esta acción eliminará permanentemente el Pokémon y toda su información.
+        </div>
+
+        <!-- Formulario de eliminación -->
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="button-group">
+                <!-- Botón de confirmación -->
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i>
+                    Sí, Eliminar Pokémon
+                </button>
+
+                <!-- Botón de cancelar -->
+                <a href="{% url 'detalle_pokemon' pokemon.id %}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </a>
+            </div>
+        </form>
+
+        <!-- Información adicional -->
+        <div class="delete-footer">
+            <p>
+                <i class="fas fa-info-circle"></i>
+                Si no estás seguro, considera <a href="{% url 'pokemon_update' pokemon.id %}">editar el Pokémon</a> en lugar de eliminarlo.
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .delete-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 0 20px;
+    }
+
+    .delete-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        padding: 2.5rem;
+        text-align: center;
+        border-top: 5px solid #dc3545;
+    }
+
+    .warning-icon {
+        font-size: 4rem;
+        color: #dc3545;
+        margin-bottom: 1.5rem;
+    }
+
+    .delete-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1E1E1E;
+        margin-bottom: 1rem;
+    }
+
+    .delete-subtitle {
+        font-size: 1.1rem;
+        color: #6C757D;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .pokemon-preview {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        text-align: left;
+    }
+
+    .pokemon-header {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .pokemon-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        overflow: hidden;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid #DC0A2D;
+    }
+
+    .pokemon-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .no-image {
+        color: #6C757D;
+        font-size: 2.5rem;
+    }
+
+    .pokemon-info h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1E1E1E;
+        margin-bottom: 0.5rem;
+    }
+
+    .pokemon-types {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .pokemon-description {
+        color: #6C757D;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    .pokemon-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .detail-item {
+        background: white;
+        padding: 1rem;
+        border-radius: 6px;
+        border: 1px solid #e9ecef;
+    }
+
+    .detail-label {
+        font-size: 0.8rem;
+        color: #6C757D;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.3rem;
+    }
+
+    .detail-value {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1E1E1E;
+        margin-bottom: 0.25rem;
+    }
+
+    .detail-subvalue {
+        font-size: 0.8rem;
+        color: #6C757D;
+    }
+
+    .warning-message {
+        background: #ffeaa7;
+        border: 1px solid #fdcb6e;
+        border-radius: 6px;
+        padding: 1rem;
+        margin: 1.5rem 0;
+        text-align: center;
+        color: #e17055;
+    }
+
+    .warning-message i {
+        margin-right: 0.5rem;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .btn {
+        padding: 0.8rem 2rem;
+        border: none;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #c82333;
+        transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+        background: #6C757D;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+    }
+
+    .delete-footer {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .delete-footer p {
+        font-size: 0.9rem;
+        color: #6C757D;
+        text-align: center;
+    }
+
+    .delete-footer a {
+        color: #DC0A2D;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .delete-footer a:hover {
+        text-decoration: underline;
+    }
+
+    /* Colores de tipos Pokémon (mismos que en update) */
+    .type-electric { background: #FFDE00; }
+    .type-fire { background: #FD7D24; }
+    .type-water { background: #4592C4; }
+    .type-grass { background: #9BCC50; }
+    .type-poison { background: #A040A0; }
+    .type-flying { background: #A0A0A0; }
+    .type-psychic { background: #A040A0; }
+    .type-ghost { background: #705898; }
+    .type-ice { background: #98D8D8; }
+    .type-fighting { background: #C03028; }
+    .type-ground { background: #E0C068; }
+    .type-rock { background: #B8A038; }
+    .type-bug { background: #A8B820; }
+    .type-dragon { background: #7038F8; }
+    .type-dark { background: #705848; }
+    .type-steel { background: #B8B8D0; }
+    .type-fairy { background: #EE99AC; }
+    .type-normal { background: #A8A878; }
+
+    @media (max-width: 768px) {
+        .delete-container {
+            margin: 1rem auto;
+        }
+
+        .delete-card {
+            padding: 2rem 1.5rem;
+        }
+
+        .delete-title {
+            font-size: 1.7rem;
+        }
+
+        .pokemon-header {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .button-group {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .pokemon-details {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteForm = document.querySelector('form');
+        const deleteButton = document.querySelector('.btn-danger');
+
+        deleteButton.addEventListener('click', function(e) {
+            if (!confirm('¿Estás completamente seguro de que deseas eliminar a {{ pokemon.nombre }}?\n\nEsta acción es irreversible y eliminará toda la información del Pokémon.')) {
+                e.preventDefault();
+            }
+        });
+
+        deleteForm.addEventListener('submit', function(e) {
+            const submitButton = deleteForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
+        });
+    });
+</script>
+{% endblock %}

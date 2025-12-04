@@ -1,0 +1,647 @@
+{% extends 'includes/navbar.html' %}
+
+{% block title %}{{ pokemon.nombre }} - PokéWiki{% endblock %}
+
+{% block content %}
+<style>
+    /* Variables y reset */
+    :root {
+        --primary: #DC0A2D;
+        --primary-dark: #A0051C;
+        --primary-light: #FF3B5C;
+        --secondary: #2A75BB;
+        --secondary-dark: #1C5A9B;
+        --accent: #FFCB05;
+        --dark: #FFFFFF; /* Cambiado a blanco para mejor contraste */
+        --light: rgba(255, 255, 255, 0.1); /* Más transparente */
+        --gray: #E0E0E0; /* Gris más claro */
+        --electric: #FFDE00;
+        --water: #4592C4;
+        --fire: #FD7D24;
+        --grass: #9BCC50;
+        --poison: #A040A0;
+        --flying: #A0A0A0;
+        --psychic: #A040A0;
+        --ghost: #705898;
+        --ice: #98D8D8;
+        --fighting: #C03028;
+        --ground: #E0C068;
+        --rock: #B8A038;
+        --bug: #A8B820;
+        --dragon: #7038F8;
+        --dark-type: #705848;
+        --steel: #B8B8D0;
+        --fairy: #EE99AC;
+        --normal: #A8A878;
+        --border-radius: 12px;
+        --shadow: 0 4px 20px rgba(0,0,0,0.3); /* Sombra más oscura */
+        --transition: all 0.3s ease;
+    }
+
+    body {
+        background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d) !important;
+        background-attachment: fixed !important;
+        color: var(--dark) !important;
+        min-height: 100vh;
+    }
+
+    .detail-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 20px;
+    }
+
+    /* Pokemon Detail Section */
+    .pokemon-detail {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: start;
+        background: rgba(0, 0, 0, 0.3); /* Fondo semi-transparente */
+        backdrop-filter: blur(10px);
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .pokemon-image-section {
+        text-align: center;
+        position: sticky;
+        top: 2rem;
+    }
+
+    .pokemon-main-image {
+        width: 300px;
+        height: 300px;
+        background: linear-gradient(135deg, rgba(245, 247, 250, 0.2), rgba(195, 207, 226, 0.2));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        border: 5px solid var(--accent);
+        backdrop-filter: blur(5px);
+    }
+
+    .pokemon-main-image img {
+        max-width: 90%;
+        max-height: 90%;
+        border-radius: 50%;
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    }
+
+    .pokemon-id-badge {
+        display: inline-block;
+        background: rgba(220, 10, 45, 0.8);
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn {
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        text-align: center;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+
+    .btn-edit {
+        background: rgba(42, 117, 187, 0.8);
+    }
+
+    .btn-edit:hover {
+        background: rgba(28, 90, 155, 0.9);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(42, 117, 187, 0.4);
+    }
+
+    .btn-delete {
+        background: rgba(220, 53, 69, 0.8);
+    }
+
+    .btn-delete:hover {
+        background: rgba(200, 35, 51, 0.9);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+    }
+
+    .btn-back {
+        background: rgba(108, 117, 125, 0.8);
+    }
+
+    .btn-back:hover {
+        background: rgba(90, 98, 104, 0.9);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+    }
+
+    .pokemon-info-section {
+        padding: 1rem;
+    }
+
+    .pokemon-name {
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--accent); /* Usar el color acento para mejor visibilidad */
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .pokemon-types {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .type-badge {
+        padding: 0.7rem 1.5rem;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: white;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .pokemon-description {
+        background: var(--light);
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+        line-height: 1.7;
+        border-left: 4px solid var(--accent);
+        color: var(--dark);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Attacks Section */
+    .attacks-section {
+        margin-top: 2rem;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--accent); /* Usar acento para títulos */
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .section-title i {
+        color: var(--accent);
+    }
+
+    .attacks-grid {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .attack-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        border-left: 4px solid;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: var(--transition);
+        color: var(--dark);
+    }
+
+    .attack-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .attack-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .attack-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--dark);
+    }
+
+    .attack-type {
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: white;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .attack-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(5px);
+        border-radius: var(--border-radius);
+        color: var(--dark);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--accent); /* Usar acento para valores importantes */
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: var(--gray);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Metadata Section */
+    .metadata-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .metadata-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .metadata-item {
+        text-align: center;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(5px);
+        border-radius: var(--border-radius);
+        color: var(--dark);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: var(--transition);
+    }
+
+    .metadata-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .metadata-label {
+        font-size: 0.9rem;
+        color: var(--gray);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .metadata-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--dark);
+    }
+
+    /* Type Colors - Manteniendo colores pero con fondo más oscuro */
+    .type-electric { background: rgba(255, 222, 0, 0.8); }
+    .type-fire { background: rgba(253, 125, 36, 0.8); }
+    .type-water { background: rgba(69, 146, 196, 0.8); }
+    .type-grass { background: rgba(155, 204, 80, 0.8); }
+    .type-poison { background: rgba(160, 64, 160, 0.8); }
+    .type-flying { background: rgba(160, 160, 160, 0.8); }
+    .type-psychic { background: rgba(160, 64, 160, 0.8); }
+    .type-ghost { background: rgba(112, 88, 152, 0.8); }
+    .type-ice { background: rgba(152, 216, 216, 0.8); }
+    .type-fighting { background: rgba(192, 48, 40, 0.8); }
+    .type-ground { background: rgba(224, 192, 104, 0.8); }
+    .type-rock { background: rgba(184, 160, 56, 0.8); }
+    .type-bug { background: rgba(168, 184, 32, 0.8); }
+    .type-dragon { background: rgba(112, 56, 248, 0.8); }
+    .type-dark { background: rgba(112, 88, 72, 0.8); }
+    .type-steel { background: rgba(184, 184, 208, 0.8); }
+    .type-fairy { background: rgba(238, 153, 172, 0.8); }
+    .type-normal { background: rgba(168, 168, 120, 0.8); }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+        .pokemon-detail {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            padding: 1.5rem;
+        }
+        
+        .pokemon-image-section {
+            position: static;
+        }
+        
+        .pokemon-main-image {
+            width: 250px;
+            height: 250px;
+        }
+        
+        .pokemon-name {
+            font-size: 2.5rem;
+        }
+
+        .action-buttons {
+            flex-direction: row;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 150px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .detail-container {
+            margin: 1rem auto;
+            padding: 0 15px;
+        }
+        
+        .pokemon-detail {
+            padding: 1rem;
+        }
+        
+        .pokemon-main-image {
+            width: 200px;
+            height: 200px;
+        }
+        
+        .pokemon-name {
+            font-size: 2rem;
+        }
+        
+        .type-badge {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+        }
+        
+        .attack-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .attack-header {
+            flex-direction: column;
+            align-items: start;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .pokemon-main-image {
+            width: 180px;
+            height: 180px;
+        }
+        
+        .pokemon-name {
+            font-size: 1.8rem;
+        }
+        
+        .pokemon-types {
+            flex-direction: column;
+            align-items: start;
+        }
+        
+        .metadata-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
+<div class="detail-container">
+    <!-- Pokemon Detail Section -->
+    <section class="pokemon-detail">
+        <!-- Image Section -->
+        <div class="pokemon-image-section">
+            <div class="pokemon-main-image">
+                {% if pokemon.imagen %}
+                    <img src="{{ pokemon.imagen.url }}" alt="{{ pokemon.nombre }}">
+                {% else %}
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{{ pokemon.numero_pokedex }}.png" alt="{{ pokemon.nombre }}">
+                {% endif %}
+            </div>
+            <div class="pokemon-id-badge">
+                #{{ pokemon.numero_pokedex|stringformat:"03d" }}
+            </div>
+            
+            <!-- Botones de acción -->
+            <div class="action-buttons">
+                <a href="{% url 'pokemon_update' pokemon.id %}" class="btn btn-edit">
+                    <i class="fas fa-edit"></i>
+                    Editar Pokémon
+                </a>
+                <a href="{% url 'pokemon_delete' pokemon.id %}" class="btn btn-delete">
+                    <i class="fas fa-trash"></i>
+                    Eliminar Pokémon
+                </a>
+                <a href="{% url 'lista_pokemones' %}" class="btn btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver al Pokédex
+                </a>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div class="pokemon-info-section">
+            <h1 class="pokemon-name">{{ pokemon.nombre }}</h1>
+            
+            <div class="pokemon-types">
+                <span class="type-badge type-{{ pokemon.tipo_primario|lower }}">{{ pokemon.tipo_primario }}</span>
+                {% if pokemon.tipo_secundario %}
+                <span class="type-badge type-{{ pokemon.tipo_secundario|lower }}">{{ pokemon.tipo_secundario }}</span>
+                {% endif %}
+            </div>
+
+            <div class="pokemon-description">
+                {{ pokemon.descripcion }}
+            </div>
+
+            <!-- Attacks Section -->
+            <div class="attacks-section">
+                <h2 class="section-title">
+                    <i class="fas fa-bolt"></i> Ataques Únicos
+                </h2>
+                
+                <div class="attacks-grid">
+                    <!-- Ataque 1 -->
+                    <div class="attack-card" style="border-left-color: var(--{{ pokemon.ataque_1_tipo|lower }});">
+                        <div class="attack-header">
+                            <h3 class="attack-name">{{ pokemon.ataque_1_nombre }}</h3>
+                            <span class="attack-type type-{{ pokemon.ataque_1_tipo|lower }}">{{ pokemon.ataque_1_tipo }}</span>
+                        </div>
+                        <div class="attack-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">{{ pokemon.ataque_1_poder }}</span>
+                                <span class="stat-label">Poder</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">{{ pokemon.ataque_1_precision }}%</span>
+                                <span class="stat-label">Precisión</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ataque 2 (si existe) -->
+                    {% if pokemon.ataque_2_nombre %}
+                    <div class="attack-card" style="border-left-color: var(--{{ pokemon.ataque_2_tipo|lower }});">
+                        <div class="attack-header">
+                            <h3 class="attack-name">{{ pokemon.ataque_2_nombre }}</h3>
+                            <span class="attack-type type-{{ pokemon.ataque_2_tipo|lower }}">{{ pokemon.ataque_2_tipo }}</span>
+                        </div>
+                        <div class="attack-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">{{ pokemon.ataque_2_poder }}</span>
+                                <span class="stat-label">Poder</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">{{ pokemon.ataque_2_precision }}%</span>
+                                <span class="stat-label">Precisión</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Metadata Section -->
+            <div class="metadata-section">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle"></i> Información
+                </h2>
+                
+                <div class="metadata-grid">
+                    <div class="metadata-item">
+                        <div class="metadata-label">Número Pokédex</div>
+                        <div class="metadata-value">#{{ pokemon.numero_pokedex|stringformat:"03d" }}</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Tipo Primario</div>
+                        <div class="metadata-value">{{ pokemon.tipo_primario }}</div>
+                    </div>
+                    {% if pokemon.tipo_secundario %}
+                    <div class="metadata-item">
+                        <div class="metadata-label">Tipo Secundario</div>
+                        <div class="metadata-value">{{ pokemon.tipo_secundario }}</div>
+                    </div>
+                    {% endif %}
+                    <div class="metadata-item">
+                        <div class="metadata-label">Fecha Registro</div>
+                        <div class="metadata-value">{{ pokemon.fecha_creacion|date:"d/m/Y" }}</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Última Actualización</div>
+                        <div class="metadata-value">{{ pokemon.fecha_actualizacion|date:"d/m/Y" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    // Efectos de hover para las tarjetas de ataque
+    document.addEventListener('DOMContentLoaded', function() {
+        const attackCards = document.querySelectorAll('.attack-card');
+        const metadataItems = document.querySelectorAll('.metadata-item');
+        
+        attackCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+            });
+        });
+
+        metadataItems.forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Confirmación para eliminar
+        const deleteBtn = document.querySelector('.btn-delete');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function(e) {
+                if (!confirm('¿Estás seguro de que quieres eliminar este Pokémon?')) {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // Efecto de entrada para el contenedor principal
+        const detailContainer = document.querySelector('.detail-container');
+        if (detailContainer) {
+            detailContainer.style.opacity = '0';
+            detailContainer.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                detailContainer.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                detailContainer.style.opacity = '1';
+                detailContainer.style.transform = 'translateY(0)';
+            }, 100);
+        }
+    });
+</script>
+{% endblock %}

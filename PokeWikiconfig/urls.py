@@ -6,7 +6,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("",include("wiki.urls"))
+    path("",include("wiki.urls")),
+    path('accounts', include('django.contrib.auth.urls')),
+    path('accounts/singup', include('accounts.urls')),
+ 
 ]
 
 if settings.DEBUG:
