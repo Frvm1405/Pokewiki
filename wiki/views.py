@@ -1,9 +1,8 @@
-
-from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
-from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from .models import Pokemon
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from .models import Pokemon  
 
 class ListPokemonView(ListView):
 
@@ -28,11 +27,12 @@ class PokemonDetailView(DetailView):
     template_name = 'detalle_pokemon.html'
     context_object_name = 'pokemon'
 
+
 class PokemonCreateView(SuccessMessageMixin, CreateView):
     """View para crear un nuevo Pokémon"""
     model = Pokemon
     template_name = 'pokemon_create.html'
-    success_url = reverse_lazy('lista_pokemon')  # Ajusta según tu URL de lista
+    success_url = reverse_lazy('lista_pokemones')  
     success_message = "¡Pokémon creado exitosamente!"
     fields = [
         'nombre',
@@ -64,11 +64,12 @@ class PokemonCreateView(SuccessMessageMixin, CreateView):
         context['submit_text'] = 'Crear Pokémon'
         return context
 
+
 class PokemonUpdateView(SuccessMessageMixin, UpdateView):
     """View para editar un Pokémon existente"""
     model = Pokemon
     template_name = 'pokemon_update.html'
-    success_url = reverse_lazy('lista_pokemon')  # Ajusta según tu URL de lista
+    success_url = reverse_lazy('lista_pokemones') 
     success_message = "¡Pokémon actualizado exitosamente!"
     fields = [
         'nombre',
@@ -101,11 +102,12 @@ class PokemonUpdateView(SuccessMessageMixin, UpdateView):
         context['pokemon'] = self.object
         return context
 
+
 class PokemonDeleteView(SuccessMessageMixin, DeleteView):
     """View para eliminar un Pokémon"""
     model = Pokemon
-    template_name = 'pokemon_delete.html'
-    success_url = reverse_lazy('lista_pokemon')  # Ajusta según tu URL de lista
+    template_name = 'delete_product.html'
+    success_url = reverse_lazy('lista_pokemones')  
     success_message = "¡Pokémon eliminado exitosamente!"
     context_object_name = 'pokemon'
 

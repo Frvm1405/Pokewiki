@@ -212,240 +212,242 @@
             color: var(--accent);
         }
 
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 2000;
-            backdrop-filter: blur(5px);
+        /* Main Content Area */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
-        .modal.active {
+        /* Auth Pages Styles */
+        .auth-container {
+            min-height: calc(100vh - 80px);
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 450px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            overflow: hidden;
-            animation: modalSlideIn 0.3s ease;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            padding: 1.5rem;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: var(--transition);
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .close-modal:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .modal-body {
             padding: 2rem;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden;
+            border: 3px solid var(--primary);
+        }
+
+        .auth-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .auth-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .auth-logo i {
+            font-size: 2.5rem;
+            color: var(--accent);
+        }
+
+        .auth-logo h2 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .auth-subtitle {
+            opacity: 0.9;
+            margin: 0;
+            font-size: 1rem;
         }
 
         .auth-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            padding: 2rem;
         }
 
         .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .form-label {
-            font-weight: 600;
-            color: var(--dark);
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
         }
 
-        .form-input {
+        .form-control {
+            width: 100%;
             padding: 0.8rem 1rem;
-            border: 2px solid var(--light);
-            border-radius: var(--border-radius);
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
             font-size: 1rem;
             transition: var(--transition);
         }
 
-        .form-input:focus {
+        .form-control:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(220, 10, 45, 0.1);
         }
 
-        .form-error {
-            color: #dc3545;
+        .form-text {
+            margin-top: 0.5rem;
             font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .form-check {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin-top: 0.5rem;
+            margin: 1rem 0;
         }
 
-        .form-success {
-            color: var(--success);
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
         }
 
-        .btn-submit {
-            background: var(--primary);
-            color: white;
-            border: none;
+        .form-check-label {
+            color: var(--dark);
+            cursor: pointer;
+        }
+
+        .btn {
             padding: 0.8rem 1.5rem;
+            border: none;
             border-radius: 25px;
             font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
             transition: var(--transition);
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            margin-top: 1rem;
         }
 
-        .btn-submit:hover {
-            background: var(--primary-dark);
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(220, 10, 45, 0.3);
+            box-shadow: 0 5px 15px rgba(220, 10, 45, 0.3);
         }
 
-        .btn-submit.success {
-            background: var(--success);
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #218838 100%);
+            color: white;
         }
 
-        .btn-submit.success:hover {
-            background: #218838;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
         }
 
-        .modal-footer {
-            padding: 1rem 2rem;
+        .btn-block {
+            width: 100%;
+        }
+
+        .auth-footer {
+            padding: 1.5rem 2rem;
             text-align: center;
-            border-top: 1px solid var(--light);
-            color: var(--gray);
-            font-size: 0.9rem;
+            border-top: 1px solid #e0e0e0;
+            background: #f8f9fa;
         }
 
-        .modal-footer a {
+        .auth-footer p {
+            margin: 0.5rem 0;
+        }
+
+        .text-link {
             color: var(--primary);
             text-decoration: none;
             font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
         }
 
-        .modal-footer a:hover {
-            color: var(--primary-dark);
+        .text-link:hover {
             text-decoration: underline;
         }
 
-        .password-requirements {
-            background: #f8f9fa;
-            border-radius: var(--border-radius);
+        .alert {
             padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .password-requirements {
             margin-top: 0.5rem;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 8px;
             border-left: 4px solid var(--primary);
         }
 
-        .password-requirements h5 {
-            margin-bottom: 0.5rem;
-            color: var(--dark);
-        }
-
         .password-requirements ul {
-            padding-left: 1.2rem;
-            margin: 0;
+            margin: 0.5rem 0 0 1.5rem;
+            padding: 0;
         }
 
         .password-requirements li {
             font-size: 0.85rem;
-            color: var(--gray);
-            margin-bottom: 0.3rem;
+            color: #6c757d;
+            margin-bottom: 0.25rem;
+            transition: var(--transition);
         }
 
         .password-requirements li.valid {
             color: var(--success);
         }
 
-        /* Switch between login/register */
-        .auth-switch {
-            text-align: center;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--light);
+        .password-requirements li.invalid {
+            color: #dc3545;
         }
 
-        .auth-switch a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .auth-switch a:hover {
-            color: var(--primary-dark);
-            text-decoration: underline;
+        .text-danger {
+            color: #dc3545 !important;
         }
 
         /* Hamburger Menu (Mobile) */
@@ -462,12 +464,6 @@
             background: white;
             border-radius: 2px;
             transition: var(--transition);
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
         }
 
         /* Responsive */
@@ -531,9 +527,16 @@
                 padding: 1rem;
             }
 
-            .modal-content {
-                width: 95%;
+            .auth-container {
+                padding: 1rem;
+            }
+            
+            .auth-card {
                 margin: 1rem;
+            }
+            
+            .auth-form {
+                padding: 1.5rem;
             }
 
             /* Hamburger animation */
@@ -563,7 +566,11 @@
                 font-size: 1.7rem;
             }
             
-            .modal-body {
+            .auth-form {
+                padding: 1.2rem;
+            }
+            
+            .auth-header {
                 padding: 1.5rem;
             }
         }
@@ -597,14 +604,14 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a href="{% url 'Pokedex' %}" class="nav-link {% if request.resolver_match.url_name == 'Pokedex' %}active{% endif %}">
+                    <a href="{% url 'pokedex' %}" class="nav-link {% if request.resolver_match.url_name == 'pokedex' %}active{% endif %}">
                         <i class="fas fa-book"></i>
                         Pokédex
                     </a>
                 </li>
                 
                 <li class="nav-item">
-                    <a href="{% url 'juegos' %}" class="nav-link {% if request.resolver_match.url_name == 'Juegos' %}active{% endif %}">
+                    <a href="{% url 'juegos' %}" class="nav-link {% if request.resolver_match.url_name == 'juegos' %}active{% endif %}">
                         <i class="fas fa-gamepad"></i>
                         Juegos
                     </a>
@@ -638,16 +645,16 @@
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <button type="button" class="login-btn" id="openLoginModal">
+                            <a href="{% url 'login' %}" class="login-btn">
                                 <i class="fas fa-sign-in-alt"></i>
                                 Iniciar Sesión
-                            </button>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <button type="button" class="register-btn" id="openRegisterModal">
+                            <a href="{% url 'signup' %}" class="register-btn">
                                 <i class="fas fa-user-plus"></i>
                                 Registrarse
-                            </button>
+                            </a>
                         </li>
                     {% endif %}
                 </div>
@@ -655,96 +662,16 @@
         </div>
     </nav>
 
-    
-    <!-- Register Modal -->
-    <div class="modal" id="registerModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">
-                    <i class="fas fa-user-plus"></i> Crear Cuenta
-                </h3>
-                <button class="close-modal" id="closeRegisterModal">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="post" action="{% url 'signup' %}" class="auth-form" id="registerForm">
-                    {% csrf_token %}
-                    
-                    <div id="registerErrors" class="form-error" style="display: none;">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <span id="registerErrorText"></span>
-                    </div>
-                    
-                    <div id="registerSuccess" class="form-success" style="display: none;">
-                        <i class="fas fa-check-circle"></i>
-                        <span id="registerSuccessText"></span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="registerUsername" class="form-label">
-                            <i class="fas fa-user"></i> Nombre de Usuario
-                        </label>
-                        <input type="text" id="registerUsername" name="username" class="form-input" required 
-                               placeholder="Elige un nombre de usuario">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="registerEmail" class="form-label">
-                            <i class="fas fa-envelope"></i> Correo Electrónico
-                        </label>
-                        <input type="email" id="registerEmail" name="email" class="form-input" required 
-                               placeholder="tu@email.com">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="registerPassword" class="form-label">
-                            <i class="fas fa-lock"></i> Contraseña
-                        </label>
-                        <input type="password" id="registerPassword" name="password1" class="form-input" required 
-                               placeholder="Crea una contraseña segura">
-                        
-                        <div class="password-requirements">
-                            <h5>Requisitos de contraseña:</h5>
-                            <ul>
-                                <li id="reqLength">Al menos 8 caracteres</li>
-                                <li id="reqUppercase">Al menos una letra mayúscula</li>
-                                <li id="reqLowercase">Al menos una letra minúscula</li>
-                                <li id="reqNumber">Al menos un número</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="registerPassword2" class="form-label">
-                            <i class="fas fa-lock"></i> Confirmar Contraseña
-                        </label>
-                        <input type="password" id="registerPassword2" name="password2" class="form-input" required 
-                               placeholder="Repite tu contraseña">
-                        <div id="passwordMatchError" class="form-error" style="display: none;">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            Las contraseñas no coinciden
-                        </div>
-                    </div>
-                    
-                    <button type="submit" class="btn-submit success">
-                        <i class="fas fa-user-plus"></i> Crear Cuenta
-                    </button>
-                </form>
-                
-                <div class="auth-switch">
-                    <p>¿Ya tienes una cuenta? <a href="#" id="switchToLogin">Inicia sesión aquí</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Content -->
-    <div class="container">
-        {% block page_content %}
-        <!-- El contenido específico de cada página irá aquí -->
+    <main>
+        {% block content %}
+        <!-- Contenido por defecto - se sobreescribe en cada página -->
         {% endblock %}
-    </div>
+        
+        {% block auth_content %}
+        <!-- Contenido específico para páginas de autenticación -->
+        {% endblock %}
+    </main>
 
     <script>
         // Mobile Menu Toggle
@@ -798,308 +725,89 @@
             });
         });
 
-        // Modal Functionality
-        const loginModal = document.getElementById('loginModal');
-        const registerModal = document.getElementById('registerModal');
-        const openLoginModalBtn = document.getElementById('openLoginModal');
-        const openRegisterModalBtn = document.getElementById('openRegisterModal');
-        const closeLoginModalBtn = document.getElementById('closeLoginModal');
-        const closeRegisterModalBtn = document.getElementById('closeRegisterModal');
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const switchToRegister = document.getElementById('switchToRegister');
-        const switchToLogin = document.getElementById('switchToLogin');
-
-        // Open modals
-        if (openLoginModalBtn) {
-            openLoginModalBtn.addEventListener('click', () => {
-                loginModal.classList.add('active');
-                closeAllModalsExcept(loginModal);
-                // Close mobile menu if open
-                hamburger.classList.remove('active');
-                navMenu.classList.remove('active');
-                // Focus on username field
-                setTimeout(() => {
-                    document.getElementById('loginUsername').focus();
-                }, 300);
-            });
-        }
-
-        if (openRegisterModalBtn) {
-            openRegisterModalBtn.addEventListener('click', () => {
-                registerModal.classList.add('active');
-                closeAllModalsExcept(registerModal);
-                // Close mobile menu if open
-                hamburger.classList.remove('active');
-                navMenu.classList.remove('active');
-                // Focus on username field
-                setTimeout(() => {
-                    document.getElementById('registerUsername').focus();
-                }, 300);
-            });
-        }
-
-        // Close modals
-        function closeAllModalsExcept(exceptModal = null) {
-            [loginModal, registerModal].forEach(modal => {
-                if (modal !== exceptModal) {
-                    modal.classList.remove('active');
-                }
-            });
-        }
-
-        function closeAllModals() {
-            [loginModal, registerModal].forEach(modal => {
-                modal.classList.remove('active');
-            });
-        }
-
-        if (closeLoginModalBtn) {
-            closeLoginModalBtn.addEventListener('click', () => {
-                loginModal.classList.remove('active');
-            });
-        }
-
-        if (closeRegisterModalBtn) {
-            closeRegisterModalBtn.addEventListener('click', () => {
-                registerModal.classList.remove('active');
-            });
-        }
-
-        // Switch between modals
-        if (switchToRegister) {
-            switchToRegister.addEventListener('click', (e) => {
-                e.preventDefault();
-                loginModal.classList.remove('active');
-                registerModal.classList.add('active');
-                setTimeout(() => {
-                    document.getElementById('registerUsername').focus();
-                }, 300);
-            });
-        }
-
-        if (switchToLogin) {
-            switchToLogin.addEventListener('click', (e) => {
-                e.preventDefault();
-                registerModal.classList.remove('active');
-                loginModal.classList.add('active');
-                setTimeout(() => {
-                    document.getElementById('loginUsername').focus();
-                }, 300);
-            });
-        }
-
-        // Close modal when clicking outside
-        [loginModal, registerModal].forEach(modal => {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                }
-            });
-        });
-
-        // Close modal with Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeAllModals();
-            }
-        });
-
-        // Form validation for login
-        if (loginForm) {
-            loginForm.addEventListener('submit', function(e) {
-                const username = document.getElementById('loginUsername').value.trim();
-                const password = document.getElementById('loginPassword').value.trim();
-                
-                if (!username || !password) {
-                    e.preventDefault();
-                    alert('Por favor, completa todos los campos.');
-                    return false;
-                }
-                
-                return true;
-            });
-        }
-
-        // Password validation for registration
-        const passwordInput = document.getElementById('registerPassword');
-        const password2Input = document.getElementById('registerPassword2');
-        const passwordMatchError = document.getElementById('passwordMatchError');
-        const requirements = {
-            length: document.getElementById('reqLength'),
-            uppercase: document.getElementById('reqUppercase'),
-            lowercase: document.getElementById('reqLowercase'),
-            number: document.getElementById('reqNumber')
-        };
-
-        function validatePassword(password) {
-            const validations = {
-                length: password.length >= 8,
-                uppercase: /[A-Z]/.test(password),
-                lowercase: /[a-z]/.test(password),
-                number: /[0-9]/.test(password)
-            };
-
-            // Update UI for each requirement
-            Object.keys(validations).forEach(key => {
-                if (validations[key]) {
-                    requirements[key].classList.add('valid');
-                } else {
-                    requirements[key].classList.remove('valid');
-                }
-            });
-
-            return validations;
-        }
-
-        function checkPasswordMatch() {
-            const password1 = passwordInput.value;
-            const password2 = password2Input.value;
+        // Password validation for registration page
+        if (document.getElementById('id_password1')) {
+            const password1 = document.getElementById('id_password1');
+            const password2 = document.getElementById('id_password2');
             
-            if (password2 && password1 !== password2) {
-                passwordMatchError.style.display = 'flex';
-                return false;
-            } else {
-                passwordMatchError.style.display = 'none';
-                return true;
+            const requirements = {
+                length: document.getElementById('req-length'),
+                upper: document.getElementById('req-upper'),
+                lower: document.getElementById('req-lower'),
+                number: document.getElementById('req-number'),
+                symbol: document.getElementById('req-symbol')
+            };
+            
+            function validatePassword(password) {
+                const validations = {
+                    length: password.length >= 8,
+                    upper: /[A-Z]/.test(password),
+                    lower: /[a-z]/.test(password),
+                    number: /[0-9]/.test(password),
+                    symbol: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+                };
+                
+                // Actualizar UI
+                Object.keys(validations).forEach(key => {
+                    if (requirements[key]) {
+                        if (validations[key]) {
+                            requirements[key].classList.add('valid');
+                            requirements[key].classList.remove('invalid');
+                        } else {
+                            requirements[key].classList.add('invalid');
+                            requirements[key].classList.remove('valid');
+                        }
+                    }
+                });
+                
+                return validations;
             }
-        }
-
-        if (passwordInput) {
-            passwordInput.addEventListener('input', function() {
+            
+            function checkPasswordMatch() {
+                const matchError = document.getElementById('password-match-error');
+                if (password2 && password2.value && password1.value !== password2.value) {
+                    if (matchError) matchError.style.display = 'block';
+                    return false;
+                } else {
+                    if (matchError) matchError.style.display = 'none';
+                    return true;
+                }
+            }
+            
+            password1.addEventListener('input', function() {
                 validatePassword(this.value);
-                if (password2Input.value) {
+                if (password2 && password2.value) {
                     checkPasswordMatch();
                 }
             });
-
-            password2Input.addEventListener('input', checkPasswordMatch);
-        }
-
-        // Form validation for registration
-        if (registerForm) {
-            registerForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const username = document.getElementById('registerUsername').value.trim();
-                const email = document.getElementById('registerEmail').value.trim();
-                const password = document.getElementById('registerPassword').value;
-                const password2 = document.getElementById('registerPassword2').value;
-                
-                // Reset errors
-                document.getElementById('registerErrors').style.display = 'none';
-                document.getElementById('registerSuccess').style.display = 'none';
-                
-                // Basic validation
-                if (!username || !email || !password || !password2) {
-                    showRegisterError('Por favor, completa todos los campos.');
-                    return false;
-                }
-                
-                if (username.length < 3) {
-                    showRegisterError('El nombre de usuario debe tener al menos 3 caracteres.');
-                    return false;
-                }
-                
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    showRegisterError('Por favor, ingresa un correo electrónico válido.');
-                    return false;
-                }
-                
-                const passwordValidations = validatePassword(password);
-                const isPasswordValid = Object.values(passwordValidations).every(v => v);
-                
-                if (!isPasswordValid) {
-                    showRegisterError('La contraseña no cumple con todos los requisitos.');
-                    return false;
-                }
-                
-                if (!checkPasswordMatch()) {
-                    showRegisterError('Las contraseñas no coinciden.');
-                    return false;
-                }
-                
-                // Simulate successful registration
-                // In a real application, this would be an AJAX call to your backend
-                simulateRegistration();
-                
-                return false; // Prevent actual form submission for demo
-            });
-        }
-
-        function showRegisterError(message) {
-            const errorDiv = document.getElementById('registerErrors');
-            const errorText = document.getElementById('registerErrorText');
-            errorText.textContent = message;
-            errorDiv.style.display = 'flex';
             
-            // Scroll to error
-            errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-
-        function showRegisterSuccess(message) {
-            const successDiv = document.getElementById('registerSuccess');
-            const successText = document.getElementById('registerSuccessText');
-            successText.textContent = message;
-            successDiv.style.display = 'flex';
-        }
-
-        function simulateRegistration() {
-            // This is a simulation - in a real app, you'd make an AJAX call here
-            showRegisterSuccess('¡Cuenta creada exitosamente! Redirigiendo...');
-            
-            // Clear form
-            document.getElementById('registerForm').reset();
-            Object.values(requirements).forEach(req => req.classList.remove('valid'));
-            
-            // Simulate redirect to login after 2 seconds
-            setTimeout(() => {
-                registerModal.classList.remove('active');
-                loginModal.classList.add('active');
-                showRegisterSuccess('');
-            }, 2000);
-        }
-
-        // Check for login errors in URL
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('error') || window.location.pathname.includes('login')) {
-                // Auto-open login modal if there's an error or we're on login page
-                if (openLoginModalBtn) {
-                    setTimeout(() => {
-                        openLoginModalBtn.click();
-                    }, 500);
-                }
+            if (password2) {
+                password2.addEventListener('input', checkPasswordMatch);
             }
             
-            // Check if we should open register modal
-            if (window.location.pathname.includes('register')) {
-                if (openRegisterModalBtn) {
-                    setTimeout(() => {
-                        openRegisterModalBtn.click();
-                    }, 500);
-                }
+            // Validación del formulario de registro
+            const registerForm = document.getElementById('registerForm');
+            if (registerForm) {
+                registerForm.addEventListener('submit', function(e) {
+                    const passwordValidations = validatePassword(password1.value);
+                    const isPasswordValid = Object.values(passwordValidations).every(v => v);
+                    
+                    if (!isPasswordValid) {
+                        e.preventDefault();
+                        alert('Por favor, corrige los errores en la contraseña.');
+                        return false;
+                    }
+                    
+                    if (!checkPasswordMatch()) {
+                        e.preventDefault();
+                        alert('Las contraseñas no coinciden.');
+                        return false;
+                    }
+                    
+                    return true;
+                });
             }
-        });
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
+        }
     </script>
 </body>
 </html>
-
-{% block content %}
-
-{% endblock %}

@@ -1,8 +1,570 @@
-<h2>Registrar</h2>
-<form method='post'>
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type=" submit">Registrarse</button>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Wiki Pokémon</title>
+    <style>
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-</form>
+        .container {
+            width: 100%;
+            max-width: 500px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Tarjeta de registro */
+        .register-card {
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid #4cc9f0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4361ee, #f72585, #4cc9f0);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .pokeball {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff0000 50%, #ffffff 50%);
+            border-radius: 50%;
+            border: 3px solid #000;
+            position: relative;
+            animation: rotate 3s linear infinite;
+        }
+
+        .pokeball::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: #000;
+            border-radius: 50%;
+            border: 3px solid #ffffff;
+            z-index: 2;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+            color: #4cc9f0;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #f72585;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .description {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        /* Formulario */
+        form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group p {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4cc9f0;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid #4361ee;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #f72585;
+            box-shadow: 0 0 15px rgba(247, 37, 133, 0.3);
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        input.form-control {
+            height: 50px;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        select.form-control {
+            height: 50px;
+            cursor: pointer;
+        }
+
+        /* Estilos específicos para los campos del formulario Django */
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid #4361ee;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #f72585;
+            box-shadow: 0 0 15px rgba(247, 37, 133, 0.3);
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Errores del formulario */
+        .errorlist {
+            list-style: none;
+            margin-top: 5px;
+            padding: 0;
+        }
+
+        .errorlist li {
+            color: #ff6b6b;
+            background-color: rgba(255, 107, 107, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #ff6b6b;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        /* Botón de registro */
+        .btn-register {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-register:hover {
+            background: linear-gradient(135deg, #3a0ca3 0%, #4361ee 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        .btn-register:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-register::after {
+            content: '➤';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            opacity: 0.8;
+        }
+
+        /* Enlaces */
+        .links {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .links a {
+            color: #4cc9f0;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 5px;
+        }
+
+        .links a:hover {
+            color: #f72585;
+            background-color: rgba(247, 37, 133, 0.1);
+        }
+
+        /* Mensajes */
+        .messages {
+            margin-bottom: 25px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .alert-success {
+            background-color: rgba(72, 187, 120, 0.2);
+            border: 1px solid #48bb78;
+            color: #48bb78;
+        }
+
+        .alert-error {
+            background-color: rgba(245, 101, 101, 0.2);
+            border: 1px solid #f56565;
+            color: #f56565;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .register-card {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-control {
+                padding: 12px;
+            }
+            
+            .btn-register {
+                padding: 15px;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .register-card {
+                padding: 20px 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .logo {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .links a {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+
+        /* Mejoras visuales para campos específicos */
+        .helptext {
+            display: block;
+            color: #888;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        /* Campo de checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #4361ee;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="register-card">
+            <!-- Header con logo -->
+            <div class="header">
+                <div class="logo">
+                    <div class="pokeball"></div>
+                    <h1>Wiki Pokémon</h1>
+                </div>
+                <div class="subtitle">Únete a la comunidad Pokémon</div>
+                <p class="description">Crea tu cuenta para acceder a todas las funcionalidades de la Wiki Pokémon</p>
+            </div>
+
+            <!-- Mensajes de Django -->
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Formulario de registro -->
+            <h2 style="color: #4cc9f0; text-align: center; margin-bottom: 25px; font-size: 1.8rem;">Registrar</h2>
+            
+            <form method='post'>
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    {% if form.non_field_errors %}
+                    <div class="errorlist">
+                        {{ form.non_field_errors }}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Renderizar el formulario campo por campo para mayor control -->
+                    {% for field in form %}
+                    <div class="form-field">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        
+                        {% if field.help_text %}
+                        <span class="helptext">{{ field.help_text }}</span>
+                        {% endif %}
+                        
+                        {% if field.errors %}
+                        <div class="errorlist">
+                            {{ field.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="btn-register">Registrarse</button>
+            </form>
+
+            <!-- Enlaces -->
+            <div class="links">
+                <a href="{% url 'lista_pokemones' %}">← Volver al inicio</a>
+                <a href="{% url 'login' %}">¿Ya tienes cuenta? Inicia sesión</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mejorar la experiencia del formulario
+        document.addEventListener('DOMContentLoaded', function() {
+            // Agregar clases a los inputs del formulario Django
+            const formInputs = document.querySelectorAll('input, textarea, select');
+            formInputs.forEach(input => {
+                if (!input.classList.contains('form-control')) {
+                    input.classList.add('form-control');
+                }
+                
+                // Agregar placeholder si no tiene
+                if (input.type !== 'submit' && input.type !== 'checkbox' && !input.placeholder) {
+                    const label = document.querySelector(`label[for="${input.id}"]`);
+                    if (label) {
+                        input.placeholder = `Ingresa tu ${label.textContent.toLowerCase().replace(':', '')}`;
+                    }
+                }
+            });
+            
+            // Validación en tiempo real
+            const form = document.querySelector('form');
+            const submitBtn = document.querySelector('button[type="submit"]');
+            
+            form.addEventListener('submit', function(e) {
+                // Agregar animación de carga al botón
+                submitBtn.innerHTML = 'Registrando...';
+                submitBtn.style.opacity = '0.7';
+                submitBtn.disabled = true;
+                
+                // Validación básica
+                const requiredFields = form.querySelectorAll('input[required], select[required]');
+                let isValid = true;
+                
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        field.style.borderColor = '#ff6b6b';
+                        
+                        // Crear mensaje de error si no existe
+                        if (!field.nextElementSibling || !field.nextElementSibling.classList.contains('error-message')) {
+                            const errorMsg = document.createElement('div');
+                            errorMsg.className = 'error-message';
+                            errorMsg.style.color = '#ff6b6b';
+                            errorMsg.style.fontSize = '0.8rem';
+                            errorMsg.style.marginTop = '5px';
+                            errorMsg.textContent = 'Este campo es requerido';
+                            field.parentNode.insertBefore(errorMsg, field.nextSibling);
+                        }
+                    } else {
+                        field.style.borderColor = '#4361ee';
+                        // Remover mensaje de error si existe
+                        const errorMsg = field.nextElementSibling;
+                        if (errorMsg && errorMsg.classList.contains('error-message')) {
+                            errorMsg.remove();
+                        }
+                    }
+                });
+                
+                // Validar contraseñas si existen
+                const password1 = document.getElementById('id_password1');
+                const password2 = document.getElementById('id_password2');
+                
+                if (password1 && password2 && password1.value && password2.value) {
+                    if (password1.value !== password2.value) {
+                        isValid = false;
+                        password1.style.borderColor = '#ff6b6b';
+                        password2.style.borderColor = '#ff6b6b';
+                        
+                        const errorMsg = document.createElement('div');
+                        errorMsg.className = 'error-message';
+                        errorMsg.style.color = '#ff6b6b';
+                        errorMsg.style.fontSize = '0.8rem';
+                        errorMsg.style.marginTop = '5px';
+                        errorMsg.textContent = 'Las contraseñas no coinciden';
+                        
+                        if (password2.nextElementSibling && password2.nextElementSibling.classList.contains('error-message')) {
+                            password2.nextElementSibling.remove();
+                        }
+                        password2.parentNode.insertBefore(errorMsg, password2.nextSibling);
+                    }
+                }
+                
+                if (!isValid) {
+                    e.preventDefault();
+                    submitBtn.innerHTML = 'Registrarse';
+                    submitBtn.style.opacity = '1';
+                    submitBtn.disabled = false;
+                    
+                    // Mostrar mensaje de error general
+                    const generalError = document.createElement('div');
+                    generalError.className = 'alert alert-error';
+                    generalError.textContent = 'Por favor, corrige los errores en el formulario.';
+                    
+                    const messagesDiv = document.querySelector('.messages');
+                    if (messagesDiv) {
+                        messagesDiv.prepend(generalError);
+                    }
+                    
+                    // Hacer scroll al primer error
+                    const firstError = form.querySelector('.error-message');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+            
+            // Limpiar errores al empezar a escribir
+            formInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.style.borderColor = '#4361ee';
+                    const errorMsg = this.nextElementSibling;
+                    if (errorMsg && errorMsg.classList.contains('error-message')) {
+                        errorMsg.remove();
+                    }
+                });
+            });
+            
+            // Efecto especial en el botón
+            submitBtn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+            
+            submitBtn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
