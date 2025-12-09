@@ -56,7 +56,7 @@ ROOT_URLCONF = 'PokeWikiconfig.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR/"templates"],
+        'DIRS': [BASE_DIR/"Templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -116,11 +116,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# URL para acceder a los archivos estáticos
+STATIC_URL = '/static/'
 
-MEDIA_URL= '/media/'
-MEIDIA_ROOT= os.path.join,(BASE_DIR, 'media')
+# Directorios donde Django buscará archivos estáticos adicionales
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # Para desarrollo
+]
 
+# Directorio donde se recopilarán los archivos estáticos para producción
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Para producción
+
+# Archivos multimedia (imágenes subidas por usuarios)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
